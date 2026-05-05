@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iMate Store | Apple Devices, Accessories & Repairs in Nigeria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #fafafa;
+    --gray-100: #f2f2f2;
+    --gray-200: #e5e5e5;
+    --gray-400: #a3a3a3;
+    --gray-600: #525252;
+    --accent: #0066cc;
+    --accent-light: #e8f1fc;
+    --gold: #c9a84c;
+    --green: #22c55e;
+    --radius: 18px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 40px rgba(0,0,0,0.10);
+    --shadow-lg: 0 24px 64px rgba(0,0,0,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* UTILITY BAR */
+  .util-bar {
+    background: var(--black);
+    color: #e5e5e5;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 32px;
+    letter-spacing: 0.02em;
+  }
+  .util-bar a { color: inherit; text-decoration: none; opacity: 0.75; transition: opacity 0.2s; }
+  .util-bar a:hover { opacity: 1; }
+  .util-bar .links { display: flex; gap: 24px; }
+  .util-pill { background: var(--gold); color: var(--black); border-radius: 20px; padding: 2px 10px; font-weight: 700; font-size: 10px; letter-spacing: 0.08em; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,250,250,0.88);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--black); text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--gray-600);
+    text-decoration: none; transition: color 0.2s;
+    position: relative; padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px;
+    background: var(--accent); transition: width 0.25s;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-actions { display: flex; align-items: center; gap: 20px; }
+  .nav-actions i { font-size: 16px; cursor: pointer; color: var(--gray-600); transition: color 0.2s; }
+  .nav-actions i:hover { color: var(--accent); }
+  .cart-btn {
+    position: relative; background: var(--black); color: var(--white);
+    border: none; border-radius: 50px; padding: 8px 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+  }
+  .cart-btn:hover { background: var(--accent); }
+  .cart-badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--gold); color: var(--black);
+    width: 18px; height: 18px; border-radius: 50%;
+    font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; font-size: 20px; }
+
+  /* HERO SLIDESHOW */
+  .hero-slider {
+    position: relative; overflow: hidden;
+    min-height: 92vh;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: center;
+    padding: 80px 32px;
+    opacity: 0; transform: translateX(60px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1; transform: translateX(0);
+    position: relative; pointer-events: all;
+  }
+  .slide.exit-left { opacity: 0; transform: translateX(-60px); }
+
+  .slide-bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px; pointer-events: none;
+  }
+  .slide-glow {
+    position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    pointer-events: none;
+  }
+  .slide-inner {
+    max-width: 1280px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    position: relative; z-index: 2;
+  }
+  .slide-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,102,204,0.15); border: 1px solid rgba(0,102,204,0.3);
+    color: #60a5fa; border-radius: 50px; padding: 6px 16px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5.5vw, 66px);
+    font-weight: 700; line-height: 1.05;
+    color: #ffffff; margin-bottom: 20px; letter-spacing: -0.02em;
+  }
+  .slide-title em { font-style: italic; color: var(--gold); }
+  .slide-sub { font-size: 16px; color: rgba(255,255,255,0.58); font-weight: 300; line-height: 1.65; margin-bottom: 32px; max-width: 420px; }
+  .slide-price-block { margin-bottom: 32px; }
+  .slide-price-label { font-size: 12px; color: var(--gray-400); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px; }
+  .slide-price { font-size: 32px; font-weight: 700; color: #fff; }
+  .slide-price span { font-size: 15px; color: var(--gray-400); font-weight: 400; margin-left: 8px; }
+  .slide-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* Device visuals */
+  .slide-visual { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .slide-device-wrap {
+    animation: floatDevice 4s ease-in-out infinite;
+    filter: drop-shadow(0 40px 80px rgba(0,102,204,0.3));
+  }
+  @keyframes floatDevice { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+  .slide-device {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .slide-device.phone {
+    width: 220px; height: 420px;
+    background: linear-gradient(145deg,#1c1c1e,#2c2c2e);
+    border-radius: 38px; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .slide-device.phone.slim {
+    width: 180px; height: 420px; border-radius: 44px;
+    background: linear-gradient(145deg,#141414,#222);
+  }
+  .slide-device.laptop {
+    width: 340px; height: 220px;
+    background: linear-gradient(145deg,#1c1c1e,#2c2c2e);
+    border-radius: 14px 14px 0 0; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column;
+  }
+  .laptop-base {
+    width: 380px; height: 12px;
+    background: linear-gradient(145deg,#2c2c2e,#1c1c1e);
+    border-radius: 0 0 8px 8px; border: 1px solid rgba(255,255,255,0.06);
+    margin-top: 0;
+  }
+  .slide-device.headphones {
+    width: 220px; height: 260px;
+    background: transparent; position: relative;
+  }
+  .headphone-arc {
+    width: 200px; height: 130px;
+    border: 8px solid rgba(255,255,255,0.15);
+    border-bottom: none; border-radius: 100px 100px 0 0;
+    position: absolute; top: 0; left: 10px;
+  }
+  .headphone-cup {
+    width: 52px; height: 72px;
+    background: linear-gradient(145deg,#2c2c2e,#1c1c1e);
+    border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);
+    position: absolute; bottom: 50px;
+  }
+  .headphone-cup.left { left: 0; }
+  .headphone-cup.right { right: 0; }
+  .headphone-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); }
+  .device-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; height: 100%;
+  }
+  .device-screen i { font-size: 44px; color: rgba(255,255,255,0.85); }
+  .device-screen span { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+  .laptop-screen { padding: 24px; }
+  .laptop-screen i { font-size: 52px; }
+  .slide-stats { display: flex; gap: 12px; }
+  .slide-stat {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 14px 18px; text-align: center;
+  }
+  .slide-stat-val { font-size: 20px; font-weight: 700; color: #fff; }
+  .slide-stat-lbl { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  /* Slider controls */
+  .slider-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; z-index: 10; backdrop-filter: blur(8px);
+  }
+  .slider-btn:hover { background: rgba(255,255,255,0.25); }
+  .slider-btn.prev { left: 24px; }
+  .slider-btn.next { right: 24px; }
+  .slider-dots {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 10;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s;
+  }
+  .dot.active { background: #fff; width: 24px; border-radius: 4px; }
+
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 50px; padding: 14px 32px;
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.25s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #0052a3; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,102,204,0.4); }
+  .btn-outline {
+    background: transparent; color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.25); border-radius: 50px; padding: 14px 32px;
+    font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.25s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 32px;
+  }
+  .trust-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: stretch; justify-content: space-around;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 18px 24px; flex: 1; justify-content: center;
+    border-right: 1px solid var(--gray-200);
+  }
+  .trust-item:last-child { border-right: none; }
+  .trust-item i { font-size: 20px; color: var(--accent); }
+  .trust-text strong { display: block; font-size: 13px; font-weight: 600; }
+  .trust-text span { font-size: 11px; color: var(--gray-600); }
+
+  /* SECTION HEADERS */
+  .section-header { text-align: center; margin-bottom: 52px; }
+  .section-tag {
+    display: inline-block; background: var(--accent-light); color: var(--accent);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 50px; margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--black);
+  }
+  .section-sub { font-size: 16px; color: var(--gray-600); margin-top: 12px; font-weight: 300; }
+
+  /* CATEGORY PILLS */
+  .categories { background: #fff; padding: 64px 32px; }
+  .cat-grid {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;
+  }
+  .cat-card {
+    background: var(--gray-100); border-radius: var(--radius);
+    padding: 32px 20px; text-align: center; cursor: pointer;
+    transition: all 0.25s; border: 1.5px solid transparent; text-decoration: none; color: inherit;
+  }
+  .cat-card:hover {
+    background: #fff; border-color: var(--accent);
+    box-shadow: var(--shadow); transform: translateY(-3px);
+  }
+  .cat-icon {
+    width: 64px; height: 64px; margin: 0 auto 16px;
+    background: var(--black); border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; color: #fff;
+    transition: background 0.25s;
+  }
+  .cat-card:hover .cat-icon { background: var(--accent); }
+  .cat-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .cat-count { font-size: 12px; color: var(--gray-400); }
+
+  /* PRODUCTS */
+  .products-section { background: var(--gray-100); padding: 80px 32px; }
+  .products-inner { max-width: 1280px; margin: 0 auto; }
+  .tab-bar {
+    display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center;
+  }
+  .tab {
+    background: #fff; border: 1.5px solid var(--gray-200); border-radius: 50px;
+    padding: 9px 22px; font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; color: var(--gray-600);
+  }
+  .tab.active, .tab:hover { background: var(--black); color: #fff; border-color: var(--black); }
+  .product-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .product-card {
+    background: #fff; border-radius: var(--radius);
+    padding: 0; overflow: hidden;
+    transition: all 0.3s; border: 1px solid var(--gray-200);
+    display: flex; flex-direction: column;
+  }
+  .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+  .product-img {
+    aspect-ratio: 4/3; background: var(--gray-100);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .product-img i { font-size: 56px; color: var(--gray-400); transition: transform 0.3s; }
+  .product-card:hover .product-img i { transform: scale(1.08); }
+  .badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--accent); color: #fff; border-radius: 6px;
+    padding: 3px 9px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .badge.new { background: var(--green); }
+  .badge.hot { background: #ef4444; }
+  .badge.sale { background: var(--gold); color: var(--black); }
+  .product-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+  .product-cat { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .product-spec { font-size: 12px; color: var(--gray-600); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .product-price { font-size: 18px; font-weight: 700; }
+  .product-price .old { font-size: 12px; color: var(--gray-400); text-decoration: line-through; margin-left: 6px; font-weight: 400; }
+  .add-cart {
+    background: var(--black); color: #fff; border: none; border-radius: 50px;
+    width: 40px; height: 40px; font-size: 16px; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .add-cart:hover { background: var(--accent); transform: scale(1.1); }
+
+  /* SERVICES */
+  .services-section { background: var(--black); padding: 80px 32px; }
+  .services-inner { max-width: 1280px; margin: 0 auto; }
+  .services-section .section-title { color: #fff; }
+  .services-section .section-sub { color: var(--gray-400); }
+  .services-section .section-tag { background: rgba(0,102,204,0.2); color: #60a5fa; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .service-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius); padding: 36px 28px; transition: all 0.3s;
+  }
+  .service-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,102,204,0.4); transform: translateY(-3px); }
+  .service-icon {
+    width: 56px; height: 56px; background: rgba(0,102,204,0.15);
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #60a5fa; margin-bottom: 20px;
+  }
+  .service-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 10px; }
+  .service-desc { font-size: 14px; color: var(--gray-400); line-height: 1.65; }
+  .service-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: #60a5fa; font-size: 13px; font-weight: 600;
+    margin-top: 18px; text-decoration: none; transition: gap 0.2s;
+  }
+  .service-cta:hover { gap: 10px; }
+
+  /* SWAP SECTION */
+  .swap-section { padding: 80px 32px; background: #fff; }
+  .swap-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .swap-visual {
+    background: linear-gradient(135deg, var(--gray-100) 0%, #e0e8ff 100%);
+    border-radius: var(--radius); aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .swap-visual .swap-arrows {
+    font-size: 64px; color: var(--accent); opacity: 0.3;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.3;} 50%{transform:scale(1.08);opacity:0.5;} }
+  .swap-badge-float {
+    position: absolute; background: #fff; border-radius: var(--radius-sm);
+    padding: 12px 18px; box-shadow: var(--shadow);
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .swap-badge-float i { color: var(--gold); }
+  .swap-badge-float:nth-child(2) { top: 20%; left: 8%; }
+  .swap-badge-float:nth-child(3) { bottom: 20%; right: 8%; }
+  .swap-content { }
+  .swap-steps { display: flex; flex-direction: column; gap: 24px; margin: 32px 0; }
+  .swap-step { display: flex; align-items: flex-start; gap: 16px; }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-info strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .step-info span { font-size: 13px; color: var(--gray-600); }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--gray-100); padding: 80px 32px; }
+  .testimonials-inner { max-width: 1280px; margin: 0 auto; }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testimonial-card {
+    background: #fff; border-radius: var(--radius); padding: 32px;
+    border: 1px solid var(--gray-200); transition: box-shadow 0.2s;
+  }
+  .testimonial-card:hover { box-shadow: var(--shadow); }
+  .stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+  .testimonial-text { font-size: 15px; line-height: 1.7; color: var(--gray-600); margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+  .author-name { font-weight: 600; font-size: 14px; }
+  .author-role { font-size: 12px; color: var(--gray-400); }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, #0040a0 100%);
+    padding: 80px 32px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 50%, rgba(255,255,255,0.06) 0%, transparent 50%);
+  }
+  .cta-banner-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .cta-banner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    color: #fff; font-weight: 700; margin-bottom: 16px;
+  }
+  .cta-banner p { color: rgba(255,255,255,0.75); font-size: 16px; margin-bottom: 36px; }
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366; color: #fff;
+    border: none; border-radius: 50px; padding: 16px 36px;
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.25s;
+    text-decoration: none;
+  }
+  .whatsapp-btn:hover { background: #1da855; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
+  .whatsapp-btn i { font-size: 20px; }
+
+  /* NEWSLETTER */
+  .newsletter { background: var(--black); padding: 64px 32px; }
+  .newsletter-inner {
+    max-width: 560px; margin: 0 auto; text-align: center;
+  }
+  .newsletter h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .newsletter p { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
+  .newsletter-form { display: flex; gap: 0; }
+  .newsletter-form input {
+    flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-right: none; border-radius: 50px 0 0 50px; padding: 14px 22px;
+    color: #fff; font-size: 14px; outline: none; font-family: inherit;
+  }
+  .newsletter-form input::placeholder { color: var(--gray-400); }
+  .newsletter-form button {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 0 50px 50px 0; padding: 14px 28px;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+    font-family: inherit;
+  }
+  .newsletter-form button:hover { background: #0052a3; }
+
+  /* FOOTER */
+  footer { background: #0a0a0a; padding: 64px 32px 32px; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-brand { }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 14px;
+    display: block;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-desc { font-size: 14px; color: var(--gray-400); line-height: 1.7; margin-bottom: 24px; }
+  .social-links { display: flex; gap: 12px; }
+  .social-link {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-400); font-size: 16px; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .social-link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .social-link.wa:hover { background: #25D366; border-color: #25D366; }
+  .social-link.ig:hover { background: #e1306c; border-color: #e1306c; }
+  .footer-col h4 {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-400); margin-bottom: 18px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    font-size: 14px; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: #fff; }
+  .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+  .footer-contact-item i { color: var(--accent); font-size: 14px; margin-top: 2px; }
+  .footer-contact-item span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .footer-bottom {
+    padding-top: 28px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;
+    font-size: 12px; color: rgba(255,255,255,0.3);
+  }
+  .footer-bottom a { color: inherit; text-decoration: none; transition: color 0.2s; }
+  .footer-bottom a:hover { color: rgba(255,255,255,0.7); }
+
+  /* BLOG */
+  .blog-section { background: #fff; padding: 80px 32px; }
+  .blog-inner { max-width: 1280px; margin: 0 auto; }
+  .blog-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px; }
+  .blog-card {
+    background: var(--gray-100); border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--gray-200);
+    transition: all 0.3s; display: flex; flex-direction: column;
+  }
+  .blog-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .blog-img {
+    height: 200px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .blog-card.featured .blog-img { height: 240px; }
+  .blog-img-inner i { font-size: 56px; color: rgba(255,255,255,0.2); }
+  .blog-cat-tag {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--accent); color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 6px;
+  }
+  .blog-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .blog-meta { font-size: 11px; color: var(--gray-400); margin-bottom: 10px; letter-spacing: 0.03em; }
+  .blog-title { font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; color: var(--black); }
+  .blog-card.featured .blog-title { font-size: 20px; }
+  .blog-excerpt { font-size: 13px; color: var(--gray-600); line-height: 1.65; margin-bottom: 18px; flex: 1; }
+  .blog-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--accent); font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: gap 0.2s; margin-top: auto;
+  }
+  .blog-cta:hover { gap: 10px; }
+
+  /* MOBILE */
+  @media (max-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+  }
+  @media (max-width: 768px) {
+    .util-bar { font-size: 10px; padding: 8px 16px; }
+    .nav-inner { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hamburger { display: block; color: var(--black); }
+    .hero { padding: 60px 20px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-sub { margin: 0 auto 36px; }
+    .hero-actions { justify-content: center; }
+    .hero-visual { display: none; }
+    .trust-bar { display: none; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .swap-inner { grid-template-columns: 1fr; }
+    .swap-visual { display: none; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-form input { border-right: 1px solid rgba(255,255,255,0.12); border-radius: 50px; border-bottom: none; border-radius: 50px 50px 0 0; }
+    .newsletter-form button { border-radius: 0 0 50px 50px; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .slide-inner { grid-template-columns: 1fr; }
+    .slide-visual { display: none; }
+    .slide { padding: 60px 20px 80px; }
+    .blog-section { padding: 60px 20px; }
+    .categories, .products-section, .services-section, .swap-section, .testimonials { padding: 60px 20px; }
+    .section-header { margin-bottom: 36px; }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- UTILITY BAR -->
+<div class="util-bar">
+  <span><i class="fa-solid fa-truck-fast" style="margin-right:6px;color:#c9a84c"></i> Free Shipping on orders above ₦1,000,000</span>
+  <div class="links">
+    <a href="#repairs">Repairs</a>
+    <a href="#swap">Swap Deals</a>
+    <a href="https://wa.me/2348000000000" target="_blank"><i class="fa-brands fa-whatsapp" style="color:#25D366;margin-right:4px"></i>Chat with us</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">iMate Store<span>.</span><small style="display:block;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.05em;color:var(--gray-400);margin-top:-4px">Authorized <i class="fa-brands fa-apple" style="font-size:11px"></i> Reseller</small></a>
+    <ul class="nav-links">
+      <li><a href="#products">iPhone</a></li>
+      <li><a href="#products">Mac</a></li>
+      <li><a href="#products">iPad</a></li>
+      <li><a href="#products">Watch</a></li>
+      <li><a href="#products">AirPods</a></li>
+      <li><a href="#swap">Swap</a></li>
+      <li><a href="#repairs">Repairs</a></li>
+    </ul>
+    <div class="nav-actions">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <button class="cart-btn">
+        <i class="fa-solid fa-bag-shopping"></i> Cart
+        <span class="cart-badge">0</span>
+      </button>
+      <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SLIDESHOW -->
+<section class="hero-slider" id="hero-slider">
+  <!-- Slide 1: iPhone 17 Pro -->
+  <div class="slide active" style="background:linear-gradient(160deg,#0a0a0a 0%,#1a1a2e 60%,#0a0a0a 100%)">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-glow" style="top:-100px;right:-100px;background:radial-gradient(circle,rgba(0,102,204,0.22) 0%,transparent 70%)"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label"><i class="fa-solid fa-star"></i> New Release 2026</div>
+        <h1 class="slide-title">iPhone 17 Pro.<br><em>All Out Pro.</em></h1>
+        <p class="slide-sub">The most powerful iPhone ever. Titanium design, A19 Pro chip, and a camera system that changes everything.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦1,850,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device phone">
+            <div class="device-screen"><i class="fa-brands fa-apple"></i><span>iPhone 17 Pro</span></div>
+          </div>
+        </div>
+        <div class="slide-stats">
+          <div class="slide-stat"><div class="slide-stat-val">5k+</div><div class="slide-stat-lbl">Happy Clients</div></div>
+          <div class="slide-stat"><div class="slide-stat-val">100%</div><div class="slide-stat-lbl">Genuine</div></div>
+          <div class="slide-stat"><div class="slide-stat-val">24h</div><div class="slide-stat-lbl">Support</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: iPhone Air -->
+  <div class="slide" style="background:linear-gradient(160deg,#0d1117 0%,#0f2027 50%,#203a43 100%)">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-glow" style="bottom:-80px;left:5%;background:radial-gradient(circle,rgba(96,165,250,0.18) 0%,transparent 70%)"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(96,165,250,0.12);border-color:rgba(96,165,250,0.3);color:#93c5fd"><i class="fa-solid fa-feather"></i> Ultra Thin</div>
+        <h1 class="slide-title">iPhone Air.<br><em>The thinnest<br>iPhone ever.</em></h1>
+        <p class="slide-sub">Impossibly light. Strikingly powerful. The iPhone Air redefines what a smartphone can be.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦1,650,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device phone slim">
+            <div class="device-screen"><i class="fa-brands fa-apple"></i><span>iPhone Air</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: MacBook Pro M4 -->
+  <div class="slide" style="background:linear-gradient(160deg,#1a0a00 0%,#2d1b00 50%,#1a0a00 100%)">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-glow" style="top:-80px;right:0;background:radial-gradient(circle,rgba(201,168,76,0.2) 0%,transparent 70%)"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);color:#e8c96a"><i class="fa-solid fa-microchip"></i> M4 Chip</div>
+        <h1 class="slide-title">MacBook Pro.<br><em>Mind-blowingly<br>capable.</em></h1>
+        <p class="slide-sub">The M4 chip delivers extraordinary performance for pros. Up to 24-hour battery life.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦2,350,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary" style="background:var(--gold);color:#000"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device laptop">
+            <div class="device-screen laptop-screen"><i class="fa-brands fa-apple"></i><span>MacBook Pro M4</span></div>
+            <div class="laptop-base"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: AirPods Max -->
+  <div class="slide" style="background:linear-gradient(160deg,#0a0f1a 0%,#0a1929 50%,#071020 100%)">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-glow" style="top:-60px;left:20%;background:radial-gradient(circle,rgba(34,197,94,0.15) 0%,transparent 70%)"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.3);color:#4ade80"><i class="fa-solid fa-volume-high"></i> Spatial Audio</div>
+        <h1 class="slide-title">AirPods Max.<br><em>Sound that<br>moves you.</em></h1>
+        <p class="slide-sub">Active Noise Cancellation. Transparency mode. USB-C charging. The ultimate listening experience.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦680,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary" style="background:#22c55e"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device headphones">
+            <div class="headphone-arc"></div>
+            <div class="headphone-cup left"></div>
+            <div class="headphone-cup right"></div>
+            <div class="device-screen headphone-label"><i class="fa-solid fa-headphones"></i><span>AirPods Max</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <button class="slider-btn prev" id="slider-prev"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="slider-btn next" id="slider-next"><i class="fa-solid fa-chevron-right"></i></button>
+  <div class="slider-dots" id="slider-dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <i class="fa-solid fa-shield-halved"></i>
+      <div class="trust-text">
+        <strong>Apple Certified</strong>
+        <span>Official warranty on all devices</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <i class="fa-solid fa-truck-fast"></i>
+      <div class="trust-text">
+        <strong>Fast Delivery</strong>
+        <span>Lagos same-day, nationwide 48h</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <i class="fa-solid fa-rotate"></i>
+      <div class="trust-text">
+        <strong>Easy Swap</strong>
+        <span>Trade in your old device today</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <i class="fa-solid fa-headset"></i>
+      <div class="trust-text">
+        <strong>24/7 Support</strong>
+        <span>WhatsApp, call & email</span>
+      </div>
+    </div>
+    <div class="trust-item">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <div class="trust-text">
+        <strong>Flexible Payment</strong>
+        <span>Installment plans available</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="section-header fade-up">
+    <div class="section-tag">Browse by Category</div>
+    <h2 class="section-title">Find Your Device</h2>
+    <p class="section-sub">Everything Apple, always authentic.</p>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+      <div class="cat-name">iPhone</div>
+      <div class="cat-count">20+ models</div>
+    </a>
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-solid fa-laptop"></i></div>
+      <div class="cat-name">MacBook</div>
+      <div class="cat-count">8+ models</div>
+    </a>
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-solid fa-tablet-screen-button"></i></div>
+      <div class="cat-name">iPad</div>
+      <div class="cat-count">10+ models</div>
+    </a>
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-solid fa-clock"></i></div>
+      <div class="cat-name">Apple Watch</div>
+      <div class="cat-count">6+ models</div>
+    </a>
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-solid fa-headphones"></i></div>
+      <div class="cat-name">AirPods</div>
+      <div class="cat-count">5+ models</div>
+    </a>
+    <a href="#" class="cat-card fade-up">
+      <div class="cat-icon"><i class="fa-brands fa-playstation"></i></div>
+      <div class="cat-name">Gaming</div>
+      <div class="cat-count">PS5 & more</div>
+    </a>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="products">
+  <div class="products-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Hot Right Now</div>
+      <h2 class="section-title">Deals of the Month</h2>
+      <p class="section-sub">Hand-picked deals on the most in-demand Apple devices.</p>
+    </div>
+    <div class="tab-bar">
+      <button class="tab active">All</button>
+      <button class="tab">iPhone</button>
+      <button class="tab">MacBook</button>
+      <button class="tab">iPad</button>
+      <button class="tab">AirPods</button>
+      <button class="tab">Watch</button>
+      <button class="tab">Gaming</button>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 17 Pro Max (256GB)</div>
+          <div class="product-spec">A19 Pro chip · 6.9-inch ProMotion · Titanium</div>
+          <div class="product-footer">
+            <div class="product-price">₦2,250,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 16 Pro (128GB)</div>
+          <div class="product-spec">A18 Pro chip · 6.3-inch · Desert Titanium</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,850,000 <span class="old">₦2,000,000</span></div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-laptop"></i>
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">MacBook</div>
+          <div class="product-name">MacBook Pro M4 (14-inch)</div>
+          <div class="product-spec">M4 chip · 16GB RAM · 512GB SSD</div>
+          <div class="product-footer">
+            <div class="product-price">₦2,350,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-tablet-screen-button"></i>
+          <span class="badge sale">SALE</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPad</div>
+          <div class="product-name">iPad Pro 13-inch (M4)</div>
+          <div class="product-spec">M4 chip · Ultra Retina XDR · Wi-Fi</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,650,000 <span class="old">₦1,800,000</span></div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-headphones"></i>
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">AirPods</div>
+          <div class="product-name">AirPods Max (USB-C)</div>
+          <div class="product-spec">Active Noise Cancellation · Spatial Audio</div>
+          <div class="product-footer">
+            <div class="product-price">₦680,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-clock"></i>
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">Apple Watch</div>
+          <div class="product-name">Apple Watch Series 10</div>
+          <div class="product-spec">46mm · Always-On Retina · GPS</div>
+          <div class="product-footer">
+            <div class="product-price">₦580,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span class="badge sale">SALE</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 15 (128GB)</div>
+          <div class="product-spec">A16 Bionic · 6.1-inch · Dynamic Island</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,100,000 <span class="old">₦1,300,000</span></div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img">
+          <i class="fa-solid fa-laptop"></i>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">MacBook</div>
+          <div class="product-name">MacBook Air M3 (13-inch)</div>
+          <div class="product-spec">M3 chip · 8GB RAM · 256GB SSD</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,450,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="product-img" style="background:#0a0a1a">
+          <i class="fa-brands fa-playstation" style="color:#60a5fa"></i>
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat" style="color:#60a5fa">Gaming</div>
+          <div class="product-name">Sony PlayStation 5 (Disc)</div>
+          <div class="product-spec">825GB SSD · 4K 120fps · DualSense Controller</div>
+          <div class="product-footer">
+            <div class="product-price">₦750,000</div>
+            <button class="add-cart"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BLOG / NEWS -->
+<section class="blog-section" id="blog">
+  <div class="blog-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Latest News</div>
+      <h2 class="section-title">From the iMate Blog</h2>
+      <p class="section-sub">Tips, giveaways, and the latest Apple news from our team.</p>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card fade-up featured">
+        <div class="blog-img" style="background:linear-gradient(135deg,#1c1c1e,#2c2c2e)">
+          <div class="blog-img-inner"><i class="fa-solid fa-trophy"></i></div>
+          <span class="blog-cat-tag">Giveaway</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">iMate Store &nbsp;•&nbsp; 17 March, 2025</div>
+          <h3 class="blog-title">The March Challenge – Win Fantastic Prizes</h3>
+          <p class="blog-excerpt">Participate in our March challenge for a chance to win an iPhone, AirPods, and more. Open to all customers. Here's everything you need to know.</p>
+          <a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="blog-card fade-up">
+        <div class="blog-img" style="background:linear-gradient(135deg,#0f3460,#16213e)">
+          <div class="blog-img-inner"><i class="fa-solid fa-mobile-screen"></i></div>
+          <span class="blog-cat-tag">Review</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">iMate Store &nbsp;•&nbsp; 2 April, 2025</div>
+          <h3 class="blog-title">iPhone Air vs iPhone 17 Pro: Which Should You Buy?</h3>
+          <p class="blog-excerpt">We compare Apple's thinnest iPhone ever with the flagship Pro model. Find out which is right for you.</p>
+          <a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="blog-card fade-up">
+        <div class="blog-img" style="background:linear-gradient(135deg,#1a1a00,#2d2d00)">
+          <div class="blog-img-inner"><i class="fa-solid fa-wrench"></i></div>
+          <span class="blog-cat-tag">Tips</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">iMate Store &nbsp;•&nbsp; 15 April, 2025</div>
+          <h3 class="blog-title">5 Signs Your iPhone Battery Needs Replacing Right Now</h3>
+          <p class="blog-excerpt">Don't wait until your phone dies at the worst moment. Here are the warning signs to watch for—and what to do.</p>
+          <a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="services-section" id="repairs">
+  <div class="services-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Expert Care</div>
+      <h2 class="section-title">Repairs & Support</h2>
+      <p class="section-sub">Same-day service. Certified technicians. Genuine Apple parts.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-stethoscope"></i></div>
+        <div class="service-title">Free Diagnosis</div>
+        <div class="service-desc">Bring in any Apple device for a full diagnostic assessment at no charge. We'll identify every issue and give you a transparent quote.</div>
+        <a href="#" class="service-cta">Book now <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-display"></i></div>
+        <div class="service-title">Screen Replacement</div>
+        <div class="service-desc">Cracked or unresponsive screen? We use genuine Apple OEM displays. Same-day service available for most iPhone and iPad models.</div>
+        <a href="#" class="service-cta">Get a quote <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-battery-full"></i></div>
+        <div class="service-title">Battery Service</div>
+        <div class="service-desc">Is your battery draining too fast? We replace batteries across all iPhone, MacBook, and iPad generations with full warranty.</div>
+        <a href="#" class="service-cta">Check eligibility <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-droplet-slash"></i></div>
+        <div class="service-title">Water Damage Recovery</div>
+        <div class="service-desc">Don't write it off yet. Our technicians specialize in liquid damage recovery with a proven high success rate.</div>
+        <a href="#" class="service-cta">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-shield-check"></i></div>
+        <div class="service-title">Warranty Service</div>
+        <div class="service-desc">We handle Apple warranty claims and provide extended warranty coverage even on open box or pre-owned devices.</div>
+        <a href="#" class="service-cta">View coverage <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div>
+        <div class="service-title">Data Recovery</div>
+        <div class="service-desc">Lost photos, contacts, or files? Our certified recovery process retrieves data even from severely damaged devices.</div>
+        <a href="#" class="service-cta">Start recovery <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SWAP SECTION -->
+<section class="swap-section" id="swap">
+  <div class="swap-inner">
+    <div class="swap-visual">
+      <i class="fa-solid fa-arrows-rotate swap-arrows"></i>
+      <div class="swap-badge-float"><i class="fa-solid fa-star"></i> Instant valuation</div>
+      <div class="swap-badge-float"><i class="fa-solid fa-bolt"></i> Same-day swap</div>
+    </div>
+    <div class="swap-content fade-up">
+      <div class="section-tag">Swap & Resell</div>
+      <h2 class="section-title" style="text-align:left;margin-top:14px">Upgrade Your Device Today</h2>
+      <p class="section-sub" style="text-align:left">Trade in your old iPhone, iPad, or MacBook and get a fair value instantly applied to your new purchase. No stress, no drama.</p>
+      <div class="swap-steps">
+        <div class="swap-step">
+          <div class="step-num">1</div>
+          <div class="step-info">
+            <strong>Tell us about your device</strong>
+            <span>Model, storage, and current condition. Takes 2 minutes.</span>
+          </div>
+        </div>
+        <div class="swap-step">
+          <div class="step-num">2</div>
+          <div class="step-info">
+            <strong>Get an instant quote</strong>
+            <span>We give you a transparent, competitive trade-in value.</span>
+          </div>
+        </div>
+        <div class="swap-step">
+          <div class="step-num">3</div>
+          <div class="step-info">
+            <strong>Upgrade and save</strong>
+            <span>Drop off your old device and walk away with a new one.</span>
+          </div>
+        </div>
+      </div>
+      <a href="https://wa.me/2348000000000" class="btn-primary" target="_blank"><i class="fa-brands fa-whatsapp"></i> Start Your Swap</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Testimonials</div>
+      <h2 class="section-title">What Our Customers Say</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Bought my iPhone 16 Pro Max here and the experience was flawless. Price was the best in Lagos and delivery was same day. Highly recommend!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AC</div>
+          <div>
+            <div class="author-name">Adaeze Chukwu</div>
+            <div class="author-role">Verified Buyer · Lagos</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Did a swap deal for my old MacBook Pro M1. Got an amazing price and walked out with the new M4 model the same day. This team is real professionals."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#c9a84c,#e8b84b)">BK</div>
+          <div>
+            <div class="author-name">Babajide Kolapo</div>
+            <div class="author-role">Swap Customer · Abuja</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"My iPhone screen shattered and iMate replaced it same-day with an original display. Even came with a 3-month warranty. Won't go anywhere else."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#22c55e,#16a34a)">FO</div>
+          <div>
+            <div class="author-name">Funmi Oladapo</div>
+            <div class="author-role">Repair Customer · Ikeja</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="cta-banner-inner">
+    <h2>Ready to Shop? Let's Talk.</h2>
+    <p>Get instant answers, personalised deals, and exclusive pricing through our WhatsApp. We're available 24/7.</p>
+    <a href="https://wa.me/2348000000000" class="whatsapp-btn" target="_blank">
+      <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div class="newsletter-inner">
+    <h3>Stay in the Loop</h3>
+    <p>Get exclusive deals, new arrivals, and repair tips delivered to your inbox.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Enter your email address">
+      <button type="button">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo">iMate Store<span>.</span></span>
+        <p class="footer-desc">Nigeria's most trusted Apple reseller and repair center. We bring you genuine Apple products, expert repairs, and the best swap deals — all backed by real customer support.</p>
+        <div class="social-links">
+          <a href="https://wa.me/2348000000000" class="social-link wa" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="social-link ig"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">iPhone</a></li>
+          <li><a href="#">MacBook</a></li>
+          <li><a href="#">iPad</a></li>
+          <li><a href="#">Apple Watch</a></li>
+          <li><a href="#">AirPods</a></li>
+          <li><a href="#">Accessories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Screen Repair</a></li>
+          <li><a href="#">Battery Replacement</a></li>
+          <li><a href="#">Swap / Trade-In</a></li>
+          <li><a href="#">Warranty Claims</a></li>
+          <li><a href="#">Data Recovery</a></li>
+          <li><a href="#">Instalment Plans</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Us</h4>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>7 Simbiat Abiola Way, Ikeja, Lagos State, Nigeria</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <span>support@imatestores.com.ng</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <span>+234 800 000 0000</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa-solid fa-clock"></i>
+          <span>Mon–Sat: 9am – 7pm<br>Sun: 11am – 5pm</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 iMate Store. All rights reserved.</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Warranty Policy</a>
+        <a href="#">Return Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Hero Slideshow
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  let current = 0, timer;
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit-left');
+    dots[current].classList.remove('active');
+    setTimeout(() => slides[(current + slides.length) % slides.length].classList.remove('exit-left'), 700);
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), 5000);
+  }
+
+  document.getElementById('slider-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('slider-next').addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+  resetTimer();
+
+  // Scroll fade animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Tab filter (UI toggle only)
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Cart count
+  let cartCount = 0;
+  document.querySelectorAll('.add-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cartCount++;
+      document.querySelector('.cart-badge').textContent = cartCount;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      btn.style.background = '#22c55e';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-plus"></i>';
+        btn.style.background = '';
+      }, 1200);
+    });
+  });
+</script>
+</body>
+</html>
