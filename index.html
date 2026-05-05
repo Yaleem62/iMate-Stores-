@@ -52,10 +52,10 @@
   /* NAV */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.9);
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   .nav-inner {
     max-width: 1280px; margin: 0 auto;
@@ -81,7 +81,7 @@
   .nav-links a:hover { color: var(--black); }
   .nav-links a:hover::after { width: 100%; }
   .nav-actions { display: flex; align-items: center; gap: 20px; }
-  .nav-actions i { font-size: 16px; cursor: pointer; color: var(--gray-600); transition: color 0.2s; }
+  .nav-actions i { font-size: 16px; cursor: pointer; color: #ffffff; transition: color 0.2s; }
   .nav-actions i:hover { color: var(--accent); }
   .cart-btn {
     position: relative; background: var(--black); color: var(--white);
