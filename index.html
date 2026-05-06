@@ -1190,7 +1190,7 @@
 // CART DATA
 // ============================================================
 const WA_NUMBER = '2348155748154';
-let cart = {}; // { productId: { name, price, cat, img, icon, qty } }
+let cart = JSON.parse(localStorage.getItem('imateCart')) || []; // { productId: { name, price, cat, img, icon, qty } }
 
 function formatPrice(n) {
   return '₦' + n.toLocaleString('en-NG');
@@ -1206,7 +1206,7 @@ function showToast(productName) {
   toast.innerHTML = `
     <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
     <div>
-      <div style="font-weight:600">Added to Cart!</div>
+      <div style="font-w(eight:600">Added to Cart!</div>
       <div class="toast-product">${productName}</div>
     </div>
   `;
@@ -1291,6 +1291,7 @@ function renderCart() {
   });
   msg += `\n*Total: ${formatPrice(total)}*\n\nPlease confirm my order. Thank you!`;
   document.getElementById('wa-order-btn').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  localStorage.setItem('imateCart', JSON.stringify(cart));
 }
 
 // ============================================================
