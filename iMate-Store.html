@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iMate Store | Apple Devices, Accessories & Repairs in Nigeria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #fafafa;
+    --gray-100: #f2f2f2;
+    --gray-200: #e5e5e5;
+    --gray-400: #a3a3a3;
+    --gray-600: #525252;
+    --accent: #0066cc;
+    --accent-light: #e8f1fc;
+    --gold: #c9a84c;
+    --green: #22c55e;
+    --wa: #25D366;
+    --radius: 18px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 40px rgba(0,0,0,0.10);
+    --shadow-lg: 0 24px 64px rgba(0,0,0,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* ============================================================
+     TOAST NOTIFICATION
+  ============================================================ */
+  #toast-container {
+    position: fixed;
+    top: 80px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--black);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 260px;
+    border-left: 4px solid var(--green);
+    animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    pointer-events: all;
+  }
+  .toast.removing {
+    animation: toastOut 0.3s ease forwards;
+  }
+  .toast-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(34,197,94,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--green); font-size: 14px; flex-shrink: 0;
+  }
+  .toast-product { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(60px) scale(0.9); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to   { opacity: 0; transform: translateX(60px) scale(0.9); }
+  }
+
+  /* ============================================================
+     SLIDE-IN CART PANEL
+  ============================================================ */
+  #cart-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 1000;
+    pointer-events: none;
+    transition: background 0.35s;
+  }
+  #cart-overlay.open {
+    background: rgba(0,0,0,0.45);
+    pointer-events: all;
+  }
+  #cart-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 420px;
+    max-width: 95vw;
+    background: #fff;
+    box-shadow: -8px 0 60px rgba(0,0,0,0.18);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  }
+  #cart-panel.open {
+    transform: translateX(0);
+  }
+  .cart-panel-header {
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--black);
+    color: #fff;
+  }
+  .cart-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cart-panel-count {
+    background: var(--gold); color: var(--black);
+    width: 24px; height: 24px; border-radius: 50%;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .cart-close {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: none;
+    color: #fff; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .cart-close:hover { background: rgba(255,255,255,0.2); }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cart-items::-webkit-scrollbar { width: 4px; }
+  .cart-items::-webkit-scrollbar-track { background: transparent; }
+  .cart-items::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    position: relative;
+    animation: itemSlideIn 0.3s ease;
+  }
+  @keyframes itemSlideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cart-item-img {
+    width: 72px; height: 72px;
+    background: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; flex-shrink: 0;
+    border: 1px solid var(--gray-200);
+  }
+  .cart-item-img img {
+    width: 100%; height: 100%; object-fit: contain; padding: 6px;
+  }
+  .cart-item-img i { font-size: 28px; color: var(--gray-400); }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-cat { font-size: 10px; color: var(--accent); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .cart-item-name { font-size: 13px; font-weight: 600; line-height: 1.3; margin: 2px 0 6px; }
+  .cart-item-price { font-size: 15px; font-weight: 700; color: var(--black); }
+
+  .cart-qty {
+    display: flex; align-items: center; gap: 0;
+    background: #fff; border: 1.5px solid var(--gray-200); border-radius: 50px;
+    overflow: hidden; margin-top: 8px; width: fit-content;
+  }
+  .cart-qty-btn {
+    width: 28px; height: 28px; border: none; background: transparent;
+    font-size: 14px; cursor: pointer; color: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .cart-qty-btn:hover { background: var(--gray-100); }
+  .cart-qty-num {
+    min-width: 28px; text-align: center;
+    font-size: 13px; font-weight: 700;
+  }
+
+  .cart-item-remove {
+    position: absolute; top: 8px; right: 8px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: transparent; border: none;
+    color: var(--gray-400); font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .cart-item-remove:hover { background: #fee2e2; color: #ef4444; }
+
+  .cart-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px; color: var(--gray-400);
+    padding: 40px 20px; text-align: center;
+  }
+  .cart-empty i { font-size: 48px; opacity: 0.3; }
+  .cart-empty p { font-size: 15px; }
+  .cart-empty span { font-size: 13px; }
+
+  .cart-footer {
+    padding: 20px;
+    border-top: 1px solid var(--gray-200);
+    background: #fff;
+  }
+  .cart-subtotal {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .cart-subtotal span { font-size: 14px; color: var(--gray-600); }
+  .cart-subtotal strong { font-size: 20px; font-weight: 700; }
+  .cart-footer-btns { display: flex; flex-direction: column; gap: 10px; }
+  .btn-wa-order {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--wa); color: #fff;
+    border: none; border-radius: 50px; padding: 15px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.25s; text-decoration: none; width: 100%;
+  }
+  .btn-wa-order:hover { background: #1da855; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,211,102,0.35); }
+  .btn-wa-order i { font-size: 20px; }
+  .btn-clear-cart {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: transparent; color: var(--gray-600);
+    border: 1.5px solid var(--gray-200); border-radius: 50px; padding: 12px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; width: 100%;
+  }
+  .btn-clear-cart:hover { border-color: #ef4444; color: #ef4444; background: #fee2e2; }
+
+  /* ============================================================
+     QUANTITY TOGGLE on product cards
+  ============================================================ */
+  .qty-toggle {
+    display: flex; align-items: center; gap: 0;
+    background: var(--black); border-radius: 50px;
+    overflow: hidden; height: 40px;
+    animation: qtyAppear 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes qtyAppear {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .qty-toggle .q-btn {
+    width: 36px; height: 40px; background: transparent; border: none;
+    color: #fff; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-toggle .q-btn:hover { background: rgba(255,255,255,0.15); }
+  .qty-toggle .q-num {
+    min-width: 28px; text-align: center;
+    color: #fff; font-size: 14px; font-weight: 700;
+  }
+
+  @keyframes badgeBounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.6); }
+    70%  { transform: scale(0.85); }
+    100% { transform: scale(1); }
+  }
+  .cart-badge.bounce { animation: badgeBounce 0.45s ease; }
+
+  /* ============================================================
+     UTILITY BAR
+  ============================================================ */
+  .util-bar {
+    background: var(--black);
+    color: #e5e5e5;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 32px;
+    letter-spacing: 0.02em;
+  }
+  .util-bar a { color: inherit; text-decoration: none; opacity: 0.75; transition: opacity 0.2s; }
+  .util-bar a:hover { opacity: 1; }
+  .util-bar .links { display: flex; gap: 24px; }
+  .util-pill { background: var(--gold); color: var(--black); border-radius: 20px; padding: 2px 10px; font-weight: 700; font-size: 10px; letter-spacing: 0.08em; }
+
+  /* ============================================================
+     NAV
+  ============================================================ */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+    color: #fff; text-decoration: none; flex-shrink: 0;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: #ffffff;
+    text-decoration: none; transition: color 0.2s;
+    position: relative; padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px;
+    background: var(--accent); transition: width 0.25s;
+  }
+  .nav-links a:hover { color: #60a5fa; }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .nav-search-icon { font-size: 16px; cursor: pointer; color: #ffffff; transition: color 0.2s; background: none; border: none; padding: 4px; }
+  .nav-search-icon:hover { color: var(--accent); }
+  .cart-btn {
+    position: relative; background: var(--accent); color: var(--white);
+    border: none; border-radius: 50px; padding: 8px 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .cart-btn:hover { background: #0052a3; }
+  .cart-badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--gold); color: var(--black);
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ============================================================
+     HAMBURGER — Fixed & Functional
+  ============================================================ */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    z-index: 200;
+    position: relative;
+  }
+  .hamburger:hover { background: rgba(255,255,255,0.1); }
+  .hamburger .bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.25s;
+    transform-origin: center;
+  }
+  /* X state when menu is open */
+  .hamburger.active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.active .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ============================================================
+     MOBILE NAV DRAWER
+  ============================================================ */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99;
+    pointer-events: none;
+  }
+  .mobile-nav.open {
+    display: block;
+    pointer-events: all;
+  }
+  .mobile-nav-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .mobile-nav.open .mobile-nav-backdrop { opacity: 1; }
+
+  .mobile-nav-drawer {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 300px;
+    max-width: 85vw;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+    overflow-y: auto;
+  }
+  .mobile-nav.open .mobile-nav-drawer {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .mobile-nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: #fff;
+  }
+  .mobile-nav-logo span { color: var(--accent); }
+  .mobile-nav-close {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none;
+    color: #fff; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .mobile-nav-close:hover { background: rgba(255,255,255,0.15); }
+
+  .mobile-nav-links {
+    list-style: none;
+    padding: 16px 0;
+    flex: 1;
+  }
+  .mobile-nav-links li a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+  }
+  .mobile-nav-links li a:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    padding-left: 30px;
+  }
+  .mobile-nav-links li a i {
+    width: 20px;
+    color: var(--accent);
+    font-size: 14px;
+  }
+
+  .mobile-nav-footer {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobile-wa-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--wa); color: #fff;
+    border: none; border-radius: 50px; padding: 14px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: all 0.25s; text-decoration: none;
+  }
+  .mobile-wa-btn:hover { background: #1da855; }
+
+  /* ============================================================
+     HERO SLIDESHOW
+  ============================================================ */
+  .hero-slider { position: relative; overflow: hidden; min-height: 92vh; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: center;
+    padding: 80px 32px;
+    opacity: 0; transform: translateX(60px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1; transform: translateX(0);
+    position: relative; pointer-events: all;
+  }
+  .slide.exit-left { opacity: 0; transform: translateX(-60px); }
+  .slide-bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px; pointer-events: none;
+  }
+  .slide-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; pointer-events: none; }
+  .slide-inner {
+    max-width: 1280px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    position: relative; z-index: 2;
+  }
+  .slide-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,102,204,0.15); border: 1px solid rgba(0,102,204,0.3);
+    color: #60a5fa; border-radius: 50px; padding: 6px 16px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5.5vw, 66px);
+    font-weight: 700; line-height: 1.05;
+    color: #ffffff; margin-bottom: 20px; letter-spacing: -0.02em;
+  }
+  .slide-title em { font-style: italic; color: var(--gold); }
+  .slide-sub { font-size: 16px; color: rgba(255,255,255,0.58); font-weight: 300; line-height: 1.65; margin-bottom: 32px; max-width: 420px; }
+  .slide-price-block { margin-bottom: 32px; }
+  .slide-price-label { font-size: 12px; color: var(--gray-400); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px; }
+  .slide-price { font-size: clamp(22px, 3vw, 32px); font-weight: 700; color: #fff; }
+  .slide-price span { font-size: 15px; color: var(--gray-400); font-weight: 400; margin-left: 8px; }
+  .slide-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .slide-visual { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .slide-device-wrap { animation: floatDevice 4s ease-in-out infinite; filter: drop-shadow(0 40px 80px rgba(0,102,204,0.3)); }
+  @keyframes floatDevice { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);} }
+  .slide-device { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+  .slide-device.phone { width: 220px; height: 420px; background: linear-gradient(145deg,#1c1c1e,#2c2c2e); border-radius: 38px; border: 1px solid rgba(255,255,255,0.08); }
+  .slide-device.phone.slim { width: 180px; height: 420px; border-radius: 44px; background: linear-gradient(145deg,#141414,#222); }
+  .slide-device.laptop { width: 340px; height: 220px; background: linear-gradient(145deg,#1c1c1e,#2c2c2e); border-radius: 14px 14px 0 0; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; }
+  .laptop-base { width: 380px; height: 12px; background: linear-gradient(145deg,#2c2c2e,#1c1c1e); border-radius: 0 0 8px 8px; border: 1px solid rgba(255,255,255,0.06); }
+  .slide-device.headphones { width: 220px; height: 260px; background: transparent; position: relative; }
+  .headphone-arc { width: 200px; height: 130px; border: 8px solid rgba(255,255,255,0.15); border-bottom: none; border-radius: 100px 100px 0 0; position: absolute; top: 0; left: 10px; }
+  .headphone-cup { width: 52px; height: 72px; background: linear-gradient(145deg,#2c2c2e,#1c1c1e); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); position: absolute; bottom: 50px; }
+  .headphone-cup.left { left: 0; }
+  .headphone-cup.right { right: 0; }
+  .headphone-label { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); }
+  .device-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 100%; }
+  .device-screen i { font-size: 44px; color: rgba(255,255,255,0.85); }
+  .device-screen span { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+  .laptop-screen { padding: 24px; }
+  .laptop-screen i { font-size: 52px; }
+  .slide-stats { display: flex; gap: 12px; }
+  .slide-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px 18px; text-align: center; }
+  .slide-stat-val { font-size: 20px; font-weight: 700; color: #fff; }
+  .slide-stat-lbl { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 10; backdrop-filter: blur(8px); }
+  .slider-btn:hover { background: rgba(255,255,255,0.25); }
+  .slider-btn.prev { left: 24px; }
+  .slider-btn.next { right: 24px; }
+  .slider-dots { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s; }
+  .dot.active { background: #fff; width: 24px; border-radius: 4px; }
+
+  .btn-primary { background: var(--accent); color: #fff; border: none; border-radius: 50px; padding: 14px 32px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { background: #0052a3; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,102,204,0.4); }
+  .btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.25); border-radius: 50px; padding: 14px 32px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+
+  /* TRUST BAR */
+  .trust-bar { background: var(--gray-100); border-bottom: 1px solid var(--gray-200); padding: 0 32px; }
+  .trust-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: stretch; justify-content: space-around; }
+  .trust-item { display: flex; align-items: center; gap: 12px; padding: 18px 24px; flex: 1; justify-content: center; border-right: 1px solid var(--gray-200); }
+  .trust-item:last-child { border-right: none; }
+  .trust-item i { font-size: 20px; color: var(--accent); }
+  .trust-text strong { display: block; font-size: 13px; font-weight: 600; }
+  .trust-text span { font-size: 11px; color: var(--gray-600); }
+
+  /* SECTION HEADERS */
+  .section-header { text-align: center; margin-bottom: 52px; }
+  .section-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 50px; margin-bottom: 14px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 44px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--black); }
+  .section-sub { font-size: 16px; color: var(--gray-600); margin-top: 12px; font-weight: 300; }
+
+  /* CATEGORIES */
+  .categories { background: #fff; padding: 64px 32px; }
+  .cat-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  .cat-card { background: var(--gray-100); border-radius: var(--radius); padding: 32px 20px; text-align: center; cursor: pointer; transition: all 0.25s; border: 1.5px solid transparent; text-decoration: none; color: inherit; }
+  .cat-card:hover { background: #fff; border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-3px); }
+  .cat-icon { width: 64px; height: 64px; margin: 0 auto 16px; background: var(--black); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fff; transition: background 0.25s; }
+  .cat-card:hover .cat-icon { background: var(--accent); }
+  .cat-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .cat-count { font-size: 12px; color: var(--gray-400); }
+
+  /* PRODUCTS */
+  .products-section { background: var(--gray-100); padding: 80px 32px; }
+  .products-inner { max-width: 1280px; margin: 0 auto; }
+  .tab-bar { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
+  .tab { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 50px; padding: 9px 22px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--gray-600); }
+  .tab.active, .tab:hover { background: var(--black); color: #fff; border-color: var(--black); }
+  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .product-card { background: #fff; border-radius: var(--radius); padding: 0; overflow: hidden; transition: all 0.3s; border: 1px solid var(--gray-200); display: flex; flex-direction: column; }
+  .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+  .product-img { aspect-ratio: 4/3; background: var(--gray-100); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 15px; }
+  .product-img img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 15px; box-sizing: border-box; }
+  .product-img i { font-size: 56px; color: var(--gray-400); transition: transform 0.3s; }
+  .product-card:hover .product-img i { transform: scale(1.08); }
+  .badge { position: absolute; top: 14px; left: 14px; background: var(--accent); color: #fff; border-radius: 6px; padding: 3px 9px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; }
+  .badge.new { background: var(--green); }
+  .badge.hot { background: #ef4444; }
+  .badge.sale { background: var(--gold); color: var(--black); }
+  .product-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+  .product-cat { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+  .product-spec { font-size: 12px; color: var(--gray-600); margin-bottom: 14px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; gap: 10px; }
+  .product-price { font-size: 18px; font-weight: 700; flex-shrink: 0; }
+  .product-price .old { font-size: 12px; color: var(--gray-400); text-decoration: line-through; margin-left: 6px; font-weight: 400; }
+  .product-cart-ctrl { flex-shrink: 0; }
+  .add-cart {
+    background: var(--black); color: #fff; border: none; border-radius: 50px;
+    width: 40px; height: 40px; font-size: 16px; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .add-cart:hover { background: var(--accent); transform: scale(1.1); }
+
+  /* SERVICES */
+  .services-section { background: var(--black); padding: 80px 32px; }
+  .services-inner { max-width: 1280px; margin: 0 auto; }
+  .services-section .section-title { color: #fff; }
+  .services-section .section-sub { color: var(--gray-400); }
+  .services-section .section-tag { background: rgba(0,102,204,0.2); color: #60a5fa; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .service-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 36px 28px; transition: all 0.3s; }
+  .service-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,102,204,0.4); transform: translateY(-3px); }
+  .service-icon { width: 56px; height: 56px; background: rgba(0,102,204,0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #60a5fa; margin-bottom: 20px; }
+  .service-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 10px; }
+  .service-desc { font-size: 14px; color: var(--gray-400); line-height: 1.65; }
+  .service-cta { display: inline-flex; align-items: center; gap: 6px; color: #60a5fa; font-size: 13px; font-weight: 600; margin-top: 18px; text-decoration: none; transition: gap 0.2s; }
+  .service-cta:hover { gap: 10px; }
+
+  /* SWAP SECTION */
+  .swap-section { padding: 80px 32px; background: #fff; }
+  .swap-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .swap-visual { background: linear-gradient(135deg, var(--gray-100) 0%, #e0e8ff 100%); border-radius: var(--radius); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .swap-visual .swap-arrows { font-size: 64px; color: var(--accent); opacity: 0.3; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.3;} 50%{transform:scale(1.08);opacity:0.5;} }
+  .swap-badge-float { position: absolute; background: #fff; border-radius: var(--radius-sm); padding: 12px 18px; box-shadow: var(--shadow); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .swap-badge-float i { color: var(--gold); }
+  .swap-badge-float:nth-child(2) { top: 20%; left: 8%; }
+  .swap-badge-float:nth-child(3) { bottom: 20%; right: 8%; }
+  .swap-steps { display: flex; flex-direction: column; gap: 24px; margin: 32px 0; }
+  .swap-step { display: flex; align-items: flex-start; gap: 16px; }
+  .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-info strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .step-info span { font-size: 13px; color: var(--gray-600); }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--gray-100); padding: 80px 32px; }
+  .testimonials-inner { max-width: 1280px; margin: 0 auto; }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testimonial-card { background: #fff; border-radius: var(--radius); padding: 32px; border: 1px solid var(--gray-200); transition: box-shadow 0.2s; }
+  .testimonial-card:hover { box-shadow: var(--shadow); }
+  .stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+  .testimonial-text { font-size: 15px; line-height: 1.7; color: var(--gray-600); margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 100%); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .author-name { font-weight: 600; font-size: 14px; }
+  .author-role { font-size: 12px; color: var(--gray-400); }
+
+  /* CTA BANNER */
+  .cta-banner { background: linear-gradient(135deg, var(--accent) 0%, #0040a0 100%); padding: 80px 32px; text-align: center; position: relative; overflow: hidden; }
+  .cta-banner::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(255,255,255,0.06) 0%, transparent 50%); }
+  .cta-banner-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 44px); color: #fff; font-weight: 700; margin-bottom: 16px; }
+  .cta-banner p { color: rgba(255,255,255,0.75); font-size: 16px; margin-bottom: 36px; }
+  .whatsapp-btn { display: inline-flex; align-items: center; gap: 10px; background: #25D366; color: #fff; border: none; border-radius: 50px; padding: 16px 36px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.25s; text-decoration: none; }
+  .whatsapp-btn:hover { background: #1da855; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
+  .whatsapp-btn i { font-size: 20px; }
+
+  /* NEWSLETTER */
+  .newsletter { background: var(--black); padding: 64px 32px; }
+  .newsletter-inner { max-width: 560px; margin: 0 auto; text-align: center; }
+  .newsletter h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .newsletter p { font-size: 14px; color: var(--gray-400); margin-bottom: 28px; }
+  .newsletter-form { display: flex; }
+  .newsletter-form input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-right: none; border-radius: 50px 0 0 50px; padding: 14px 22px; color: #fff; font-size: 14px; outline: none; font-family: inherit; }
+  .newsletter-form input::placeholder { color: var(--gray-400); }
+  .newsletter-form button { background: var(--accent); color: #fff; border: none; border-radius: 0 50px 50px 0; padding: 14px 28px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+  .newsletter-form button:hover { background: #0052a3; }
+
+  /* BLOG */
+  .blog-section { background: #fff; padding: 80px 32px; }
+  .blog-inner { max-width: 1280px; margin: 0 auto; }
+  .blog-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 24px; }
+  .blog-card { background: var(--gray-100); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); transition: all 0.3s; display: flex; flex-direction: column; }
+  .blog-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .blog-img { height: 200px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .blog-card.featured .blog-img { height: 240px; }
+  .blog-img-inner i { font-size: 56px; color: rgba(255,255,255,0.2); }
+  .blog-cat-tag { position: absolute; top: 14px; left: 14px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; }
+  .blog-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .blog-meta { font-size: 11px; color: var(--gray-400); margin-bottom: 10px; letter-spacing: 0.03em; }
+  .blog-title { font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; color: var(--black); }
+  .blog-card.featured .blog-title { font-size: 20px; }
+  .blog-excerpt { font-size: 13px; color: var(--gray-600); line-height: 1.65; margin-bottom: 18px; flex: 1; }
+  .blog-cta { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; transition: gap 0.2s; margin-top: auto; }
+  .blog-cta:hover { gap: 10px; }
+
+  /* FOOTER */
+  footer { background: #0a0a0a; padding: 64px 32px 32px; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 14px; display: block; }
+  .footer-logo span { color: var(--accent); }
+  .footer-desc { font-size: 14px; color: var(--gray-400); line-height: 1.7; margin-bottom: 24px; }
+  .social-links { display: flex; gap: 12px; }
+  .social-link { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--gray-400); font-size: 16px; text-decoration: none; transition: all 0.2s; }
+  .social-link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .social-link.wa:hover { background: #25D366; border-color: #25D366; }
+  .social-link.ig:hover { background: #e1306c; border-color: #e1306c; }
+  .footer-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 18px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { font-size: 14px; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: #fff; }
+  .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+  .footer-contact-item i { color: var(--accent); font-size: 14px; margin-top: 2px; }
+  .footer-contact-item span { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .footer-bottom { padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12px; color: rgba(255,255,255,0.3); }
+  .footer-bottom a { color: inherit; text-decoration: none; transition: color 0.2s; }
+  .footer-bottom a:hover { color: rgba(255,255,255,0.7); }
+
+  /* SCROLL ANIMATIONS */
+  .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ============================================================
+     RESPONSIVE — Tablet (max 1024px)
+  ============================================================ */
+  @media (max-width: 1024px) {
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .blog-grid { grid-template-columns: 1fr 1fr; }
+    .blog-card.featured { grid-column: 1 / -1; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 13px; }
+  }
+
+  /* ============================================================
+     RESPONSIVE — Mobile (max 768px)
+  ============================================================ */
+  @media (max-width: 768px) {
+    /* Utility bar */
+    .util-bar { font-size: 10px; padding: 8px 16px; }
+    .util-bar .links { gap: 14px; }
+
+    /* Nav */
+    .nav-inner { padding: 0 16px; height: 58px; }
+    .nav-links { display: none; } /* hidden, replaced by mobile drawer */
+    .hamburger { display: flex; }
+    .nav-search-icon { display: none; } /* hide on mobile to save space */
+    .cart-btn { padding: 7px 14px; font-size: 12px; gap: 6px; }
+
+    /* Trust bar */
+    .trust-bar { display: none; }
+
+    /* Hero */
+    .hero-slider { min-height: auto; }
+    .slide { padding: 48px 20px 80px; min-height: 100vmin; }
+    .slide-inner { grid-template-columns: 1fr; gap: 32px; }
+    .slide-visual { display: none; }
+    .slide-sub { font-size: 14px; max-width: 100%; }
+    .slide-actions { flex-direction: column; }
+    .slide-actions .btn-primary,
+    .slide-actions .btn-outline { width: 100%; justify-content: center; }
+    .slider-btn { width: 36px; height: 36px; font-size: 13px; }
+    .slider-btn.prev { left: 12px; }
+    .slider-btn.next { right: 12px; }
+
+    /* Categories */
+    .categories { padding: 48px 16px; }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .cat-card { padding: 20px 10px; border-radius: 14px; }
+    .cat-icon { width: 48px; height: 48px; font-size: 20px; border-radius: 14px; margin-bottom: 10px; }
+    .cat-name { font-size: 12px; }
+    .cat-count { font-size: 10px; }
+
+    /* Products */
+    .products-section { padding: 48px 16px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .product-name { font-size: 13px; }
+    .product-price { font-size: 15px; }
+    .product-spec { font-size: 11px; }
+    .tab-bar { gap: 6px; }
+    .tab { padding: 8px 14px; font-size: 12px; }
+
+    /* Services */
+    .services-section { padding: 48px 16px; }
+    .services-grid { grid-template-columns: 1fr; gap: 16px; }
+    .service-card { padding: 24px 20px; }
+
+    /* Swap */
+    .swap-section { padding: 48px 16px; }
+    .swap-inner { grid-template-columns: 1fr; gap: 0; }
+    .swap-visual { display: none; }
+    .swap-content { padding-top: 0; }
+
+    /* Testimonials */
+    .testimonials { padding: 48px 16px; }
+    .testimonial-grid { grid-template-columns: 1fr; gap: 16px; }
+    .testimonial-card { padding: 24px; }
+
+    /* CTA */
+    .cta-banner { padding: 60px 20px; }
+    .whatsapp-btn { padding: 14px 28px; font-size: 15px; }
+
+    /* Newsletter */
+    .newsletter { padding: 48px 16px; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-form input {
+      border-right: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px 50px 0 0;
+    }
+    .newsletter-form button { border-radius: 0 0 50px 50px; }
+
+    /* Blog */
+    .blog-section { padding: 48px 16px; }
+    .blog-grid { grid-template-columns: 1fr; }
+
+    /* Footer */
+    footer { padding: 48px 16px 28px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; padding-bottom: 32px; }
+    .footer-bottom { flex-direction: column; text-align: center; gap: 12px; }
+
+    /* Section headers */
+    .section-header { margin-bottom: 32px; }
+
+    /* Cart panel */
+    #cart-panel { width: 100%; }
+  }
+
+  /* ============================================================
+     RESPONSIVE — Small Mobile (max 400px)
+  ============================================================ */
+  @media (max-width: 400px) {
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-grid { grid-template-columns: 1fr; }
+    .slide-title { font-size: 30px; }
+    .util-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- CART OVERLAY -->
+<div id="cart-overlay" onclick="closeCart(event)">
+  <div id="cart-panel">
+    <div class="cart-panel-header">
+      <div class="cart-panel-title">
+        <i class="fa-solid fa-bag-shopping"></i>
+        Your Cart
+        <span class="cart-panel-count" id="panel-count">0</span>
+      </div>
+      <button class="cart-close" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cart-items" id="cart-items-list">
+      <div class="cart-empty" id="cart-empty-state">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <p>Your cart is empty</p>
+        <span>Add some Apple products to get started!</span>
+      </div>
+    </div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <strong id="cart-total">₦0</strong>
+      </div>
+      <div class="cart-footer-btns">
+        <a href="#" id="wa-order-btn" class="btn-wa-order" target="_blank">
+          <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp
+        </a>
+        <button class="btn-clear-cart" onclick="clearCart()">
+          <i class="fa-solid fa-trash"></i> Clear Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" onclick="closeMobileNav()"></div>
+  <div class="mobile-nav-drawer">
+    <div class="mobile-nav-header">
+      <span class="mobile-nav-logo">iMate<span>.</span></span>
+      <button class="mobile-nav-close" onclick="closeMobileNav()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="#products" onclick="closeMobileNav()"><i class="fa-solid fa-mobile-screen"></i> iPhone</a></li>
+      <li><a href="#products" onclick="closeMobileNav()"><i class="fa-solid fa-laptop"></i> Mac</a></li>
+      <li><a href="#products" onclick="closeMobileNav()"><i class="fa-solid fa-tablet-screen-button"></i> iPad</a></li>
+      <li><a href="#products" onclick="closeMobileNav()"><i class="fa-solid fa-clock"></i> Watch</a></li>
+      <li><a href="#products" onclick="closeMobileNav()"><i class="fa-solid fa-headphones"></i> AirPods</a></li>
+      <li><a href="#swap" onclick="closeMobileNav()"><i class="fa-solid fa-arrows-rotate"></i> Swap Deals</a></li>
+      <li><a href="#repairs" onclick="closeMobileNav()"><i class="fa-solid fa-wrench"></i> Repairs</a></li>
+      <li><a href="#blog" onclick="closeMobileNav()"><i class="fa-solid fa-newspaper"></i> Blog</a></li>
+    </ul>
+    <div class="mobile-nav-footer">
+      <a href="https://wa.me/2348155748154" class="mobile-wa-btn" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+      </a>
+      <div style="font-size:12px;color:rgba(255,255,255,0.35);text-align:center">
+        <i class="fa-solid fa-phone" style="margin-right:6px;color:var(--accent)"></i>+234 812 929 5267
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UTILITY BAR -->
+<div class="util-bar">
+  <span><i class="fa-solid fa-truck-fast" style="margin-right:6px;color:#c9a84c"></i> Free Shipping on orders above ₦1,000,000</span>
+  <div class="links">
+    <a href="#repairs">Repairs</a>
+    <a href="#swap">Swap Deals</a>
+    <a href="https://wa.me/2348155748154" target="_blank"><i class="fa-brands fa-whatsapp" style="color:#25D366;margin-right:4px"></i>Chat with us</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span>iMate<span style="color:var(--accent)">.</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products">iPhone</a></li>
+      <li><a href="#products">Mac</a></li>
+      <li><a href="#products">iPad</a></li>
+      <li><a href="#products">Watch</a></li>
+      <li><a href="#products">AirPods</a></li>
+      <li><a href="#swap">Swap</a></li>
+      <li><a href="#repairs">Repairs</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-search-icon"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button class="cart-btn" onclick="toggleCart()">
+        <i class="fa-solid fa-bag-shopping"></i> Cart
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <!-- HAMBURGER: 3 bar spans, toggled by JS -->
+      <button class="hamburger" id="hamburger-btn" onclick="toggleMobileNav()" aria-label="Open menu" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SLIDESHOW -->
+<section class="hero-slider" id="hero-slider">
+  <div class="slide active" style="background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/iphone17pro.jpg') center/cover no-repeat;">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-glow" style="top:-100px;right:-100px;background:radial-gradient(circle,rgba(0,102,204,0.22) 0%,transparent 70%)"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label"><i class="fa-solid fa-star"></i> New Release 2026</div>
+        <h1 class="slide-title">iPhone 17 Pro.<br><em>All Out Pro.</em></h1>
+        <p class="slide-sub">The most powerful iPhone ever. Titanium design, A19 Pro chip, and a camera system that changes everything.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦1,850,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device phone">
+            <div class="device-screen"><i class="fa-brands fa-apple"></i><span>iPhone 17 Pro</span></div>
+          </div>
+        </div>
+        <div class="slide-stats">
+          <div class="slide-stat"><div class="slide-stat-val">5k+</div><div class="slide-stat-lbl">Happy Clients</div></div>
+          <div class="slide-stat"><div class="slide-stat-val">100%</div><div class="slide-stat-lbl">Genuine</div></div>
+          <div class="slide-stat"><div class="slide-stat-val">24h</div><div class="slide-stat-lbl">Support</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" style="background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/iphoneair.jpg') center/cover no-repeat;">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(96,165,250,0.12);border-color:rgba(96,165,250,0.3);color:#93c5fd"><i class="fa-solid fa-feather"></i> Ultra Thin</div>
+        <h1 class="slide-title">iPhone Air.<br><em>The thinnest<br>iPhone ever.</em></h1>
+        <p class="slide-sub">Impossibly light. Strikingly powerful. The iPhone Air redefines what a smartphone can be.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦1,650,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device phone slim">
+            <div class="device-screen"><i class="fa-brands fa-apple"></i><span>iPhone Air</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" style="background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/macbookpro.jpg') center/cover no-repeat;">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);color:#e8c96a"><i class="fa-solid fa-microchip"></i> M4 Chip</div>
+        <h1 class="slide-title">MacBook Pro.<br><em>Mind-blowingly<br>capable.</em></h1>
+        <p class="slide-sub">The M4 chip delivers extraordinary performance for pros. Up to 24-hour battery life.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦2,350,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary" style="background:var(--gold);color:#000"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device laptop">
+            <div class="device-screen laptop-screen"><i class="fa-brands fa-apple"></i><span>MacBook Pro M4</span></div>
+          </div>
+          <div class="laptop-base"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" style="background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/airpodsmax.jpg') center/cover no-repeat;">
+    <div class="slide-bg-grid"></div>
+    <div class="slide-inner">
+      <div class="slide-content">
+        <div class="slide-label" style="background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.3);color:#4ade80"><i class="fa-solid fa-volume-high"></i> Spatial Audio</div>
+        <h1 class="slide-title">AirPods Max.<br><em>Sound that<br>moves you.</em></h1>
+        <p class="slide-sub">Active Noise Cancellation. Transparency mode. USB-C charging. The ultimate listening experience.</p>
+        <div class="slide-price-block">
+          <div class="slide-price-label">Starting from</div>
+          <div class="slide-price">₦680,000 <span>free delivery</span></div>
+        </div>
+        <div class="slide-actions">
+          <a href="#products" class="btn-primary" style="background:#22c55e"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          <a href="#" class="btn-outline">Learn More <i class="fa-solid fa-chevron-right" style="font-size:11px"></i></a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="slide-device-wrap">
+          <div class="slide-device headphones">
+            <div class="headphone-arc"></div>
+            <div class="headphone-cup left"></div>
+            <div class="headphone-cup right"></div>
+            <div class="device-screen headphone-label"><i class="fa-solid fa-headphones"></i><span>AirPods Max</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="slider-btn prev" id="slider-prev"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="slider-btn next" id="slider-next"><i class="fa-solid fa-chevron-right"></i></button>
+  <div class="slider-dots" id="slider-dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item"><i class="fa-solid fa-shield-halved"></i><div class="trust-text"><strong>Apple Certified</strong><span>Official warranty on all devices</span></div></div>
+    <div class="trust-item"><i class="fa-solid fa-truck-fast"></i><div class="trust-text"><strong>Fast Delivery</strong><span>Lagos same-day, nationwide 48h</span></div></div>
+    <div class="trust-item"><i class="fa-solid fa-rotate"></i><div class="trust-text"><strong>Easy Swap</strong><span>Trade in your old device today</span></div></div>
+    <div class="trust-item"><i class="fa-solid fa-headset"></i><div class="trust-text"><strong>24/7 Support</strong><span>WhatsApp, call & email</span></div></div>
+    <div class="trust-item"><i class="fa-solid fa-money-bill-wave"></i><div class="trust-text"><strong>Flexible Payment</strong><span>Installment plans available</span></div></div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="section-header fade-up">
+    <div class="section-tag">Browse by Category</div>
+    <h2 class="section-title">Find Your Device</h2>
+    <p class="section-sub">Everything Apple, always authentic.</p>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-solid fa-mobile-screen"></i></div><div class="cat-name">iPhone</div><div class="cat-count">20+ models</div></a>
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-solid fa-laptop"></i></div><div class="cat-name">MacBook</div><div class="cat-count">8+ models</div></a>
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-solid fa-tablet-screen-button"></i></div><div class="cat-name">iPad</div><div class="cat-count">10+ models</div></a>
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-solid fa-clock"></i></div><div class="cat-name">Apple Watch</div><div class="cat-count">6+ models</div></a>
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-solid fa-headphones"></i></div><div class="cat-name">AirPods</div><div class="cat-count">5+ models</div></a>
+    <a href="#" class="cat-card fade-up"><div class="cat-icon"><i class="fa-brands fa-playstation"></i></div><div class="cat-name">Gaming</div><div class="cat-count">PS5 & more</div></a>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="products">
+  <div class="products-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Hot Right Now</div>
+      <h2 class="section-title">Deals of the Month</h2>
+      <p class="section-sub">Hand-picked deals on the most in-demand Apple devices.</p>
+    </div>
+    <div class="tab-bar">
+      <button class="tab active">All</button>
+      <button class="tab">iPhone</button>
+      <button class="tab">MacBook</button>
+      <button class="tab">iPad</button>
+      <button class="tab">AirPods</button>
+      <button class="tab">Watch</button>
+      <button class="tab">Gaming</button>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card fade-up" data-id="p1" data-name="iPhone 17 Pro Max (256GB)" data-price="2250000" data-cat="iPhone" data-img="images/iphone17promax.jpeg" data-icon="fa-mobile-screen">
+        <div class="product-img">
+          <img src="images/iphone17promax.jpeg" alt="iPhone 17 Pro Max" onerror="this.style.display='none'">
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 17 Pro Max (256GB)</div>
+          <div class="product-spec">A19 Pro chip · 6.9-inch ProMotion · Titanium</div>
+          <div class="product-footer">
+            <div class="product-price">₦2,250,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p2" data-name="iPhone 16 Pro (128GB)" data-price="1850000" data-cat="iPhone" data-img="images/iphone16pro.png" data-icon="fa-mobile-screen">
+        <div class="product-img">
+          <img src="images/iphone16pro.png" alt="iPhone 16 Pro" onerror="this.style.display='none'">
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 16 Pro (128GB)</div>
+          <div class="product-spec">A18 Pro chip · 6.3-inch · Desert Titanium</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,850,000 <span class="old">₦2,000,000</span></div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p3" data-name="MacBook Pro M4 (14-inch)" data-price="2350000" data-cat="MacBook" data-img="images/macbookprom4.jpeg" data-icon="fa-laptop">
+        <div class="product-img">
+          <img src="images/macbookprom4.jpeg" alt="MacBook Pro M4" onerror="this.style.display='none'">
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">MacBook</div>
+          <div class="product-name">MacBook Pro M4 (14-inch)</div>
+          <div class="product-spec">M4 chip · 16GB RAM · 512GB SSD</div>
+          <div class="product-footer">
+            <div class="product-price">₦2,350,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p4" data-name="iPad Pro 13-inch (M4)" data-price="1650000" data-cat="iPad" data-img="images/ipadprom4.jpeg" data-icon="fa-tablet-screen-button">
+        <div class="product-img">
+          <img src="images/ipadprom4.jpeg" alt="iPad Pro M4" onerror="this.style.display='none'">
+          <span class="badge sale">SALE</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPad</div>
+          <div class="product-name">iPad Pro 13-inch (M4)</div>
+          <div class="product-spec">M4 chip · Ultra Retina XDR · Wi-Fi</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,650,000 <span class="old">₦1,800,000</span></div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p5" data-name="AirPods Max (USB-C)" data-price="680000" data-cat="AirPods" data-img="images/airpodsmax.jpg" data-icon="fa-headphones">
+        <div class="product-img">
+          <img src="images/airpodsmax.jpg" alt="AirPods Max" onerror="this.style.display='none'">
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">AirPods</div>
+          <div class="product-name">AirPods Max (USB-C)</div>
+          <div class="product-spec">Active Noise Cancellation · Spatial Audio</div>
+          <div class="product-footer">
+            <div class="product-price">₦680,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p6" data-name="Apple Watch Series 11" data-price="580000" data-cat="Watch" data-img="images/applewatch11.jpeg" data-icon="fa-clock">
+        <div class="product-img">
+          <img src="images/applewatch11.jpeg" alt="Apple Watch 11" onerror="this.style.display='none'">
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">Apple Watch</div>
+          <div class="product-name">Apple Watch Series 11</div>
+          <div class="product-spec">46mm · Always-On Retina · GPS</div>
+          <div class="product-footer">
+            <div class="product-price">₦580,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p7" data-name="iPhone 15 (128GB)" data-price="1100000" data-cat="iPhone" data-img="images/iphone15.jpeg" data-icon="fa-mobile-screen">
+        <div class="product-img">
+          <img src="images/iphone15.jpeg" alt="iPhone 15" onerror="this.style.display='none'">
+          <span class="badge sale">SALE</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat">iPhone</div>
+          <div class="product-name">iPhone 15 (128GB)</div>
+          <div class="product-spec">A16 Bionic · 6.1-inch · Dynamic Island</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,100,000 <span class="old">₦1,300,000</span></div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p8" data-name="MacBook Air M3 (13-inch)" data-price="1450000" data-cat="MacBook" data-img="images/macbookair m3.jpg" data-icon="fa-laptop">
+        <div class="product-img">
+          <img src="images/macbookair m3.jpg" alt="MacBook Air M3" onerror="this.style.display='none'">
+        </div>
+        <div class="product-body">
+          <div class="product-cat">MacBook</div>
+          <div class="product-name">MacBook Air M3 (13-inch)</div>
+          <div class="product-spec">M3 chip · 8GB RAM · 256GB SSD</div>
+          <div class="product-footer">
+            <div class="product-price">₦1,450,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up" data-id="p9" data-name="Sony PlayStation 5 (Disc)" data-price="750000" data-cat="Gaming" data-img="images/PS_5.webp" data-icon="fa-gamepad">
+        <div class="product-img" style="background:#0a0a1a">
+          <img src="images/PS_5.webp" alt="PlayStation 5" onerror="this.style.display='none'">
+          <span class="badge hot">HOT</span>
+        </div>
+        <div class="product-body">
+          <div class="product-cat" style="color:#60a5fa">Gaming</div>
+          <div class="product-name">Sony PlayStation 5 (Disc)</div>
+          <div class="product-spec">825GB SSD · 4K 120fps · DualSense Controller</div>
+          <div class="product-footer">
+            <div class="product-price">₦750,000</div>
+            <div class="product-cart-ctrl"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog-section" id="blog">
+  <div class="blog-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Latest News</div>
+      <h2 class="section-title">From the iMate Blog</h2>
+      <p class="section-sub">Tips, giveaways, and the latest Apple news from our team.</p>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card fade-up featured">
+        <div class="blog-img" style="background:linear-gradient(135deg,#1c1c1e,#2c2c2e)"><div class="blog-img-inner"><i class="fa-solid fa-trophy"></i></div><span class="blog-cat-tag">Giveaway</span></div>
+        <div class="blog-body"><div class="blog-meta">iMate Store &nbsp;•&nbsp; 17 March, 2025</div><h3 class="blog-title">The March Challenge – Win Fantastic Prizes</h3><p class="blog-excerpt">Participate in our March challenge for a chance to win an iPhone, AirPods, and more. Open to all customers.</p><a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></a></div>
+      </div>
+      <div class="blog-card fade-up">
+        <div class="blog-img" style="background:linear-gradient(135deg,#0f3460,#16213e)"><div class="blog-img-inner"><i class="fa-solid fa-mobile-screen"></i></div><span class="blog-cat-tag">Review</span></div>
+        <div class="blog-body"><div class="blog-meta">iMate Store &nbsp;•&nbsp; 2 April, 2025</div><h3 class="blog-title">iPhone Air vs iPhone 17 Pro: Which Should You Buy?</h3><p class="blog-excerpt">We compare Apple's thinnest iPhone ever with the flagship Pro model.</p><a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></a></div>
+      </div>
+      <div class="blog-card fade-up">
+        <div class="blog-img" style="background:linear-gradient(135deg,#1a1a00,#2d2d00)"><div class="blog-img-inner"><i class="fa-solid fa-wrench"></i></div><span class="blog-cat-tag">Tips</span></div>
+        <div class="blog-body"><div class="blog-meta">iMate Store &nbsp;•&nbsp; 15 April, 2025</div><h3 class="blog-title">5 Signs Your iPhone Battery Needs Replacing Right Now</h3><p class="blog-excerpt">Don't wait until your phone dies at the worst moment. Here are the warning signs to watch for.</p><a href="#" class="blog-cta">Read More <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="repairs">
+  <div class="services-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Expert Care</div>
+      <h2 class="section-title">Repairs & Support</h2>
+      <p class="section-sub">Same-day service. Certified technicians. Genuine Apple parts.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-stethoscope"></i></div><div class="service-title">Free Diagnosis</div><div class="service-desc">Bring in any Apple device for a full diagnostic at no charge. We'll identify every issue and give you a transparent quote.</div><a href="#" class="service-cta">Book now <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-display"></i></div><div class="service-title">Screen Replacement</div><div class="service-desc">Cracked screen? We use genuine Apple OEM displays. Same-day service for most iPhone and iPad models.</div><a href="#" class="service-cta">Get a quote <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-battery-full"></i></div><div class="service-title">Battery Service</div><div class="service-desc">Battery draining fast? We replace batteries across all iPhone, MacBook, and iPad generations with full warranty.</div><a href="#" class="service-cta">Check eligibility <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-droplet-slash"></i></div><div class="service-title">Water Damage Recovery</div><div class="service-desc">Our technicians specialize in liquid damage recovery with a proven high success rate.</div><a href="#" class="service-cta">Learn more <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-shield-check"></i></div><div class="service-title">Warranty Service</div><div class="service-desc">We handle Apple warranty claims and provide extended coverage on open box or pre-owned devices.</div><a href="#" class="service-cta">View coverage <i class="fa-solid fa-arrow-right"></i></a></div>
+      <div class="service-card fade-up"><div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div><div class="service-title">Data Recovery</div><div class="service-desc">Lost photos or files? Our certified recovery process retrieves data even from severely damaged devices.</div><a href="#" class="service-cta">Start recovery <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- SWAP -->
+<section class="swap-section" id="swap">
+  <div class="swap-inner">
+    <div class="swap-visual">
+      <i class="fa-solid fa-arrows-rotate swap-arrows"></i>
+      <div class="swap-badge-float"><i class="fa-solid fa-star"></i> Instant valuation</div>
+      <div class="swap-badge-float"><i class="fa-solid fa-bolt"></i> Same-day swap</div>
+    </div>
+    <div class="swap-content fade-up">
+      <div class="section-tag">Swap & Resell</div>
+      <h2 class="section-title" style="text-align:left;margin-top:14px">Upgrade Your Device Today</h2>
+      <p class="section-sub" style="text-align:left">Trade in your old iPhone, iPad, or MacBook and get a fair value instantly applied to your new purchase.</p>
+      <div class="swap-steps">
+        <div class="swap-step"><div class="step-num">1</div><div class="step-info"><strong>Tell us about your device</strong><span>Model, storage, and current condition. Takes 2 minutes.</span></div></div>
+        <div class="swap-step"><div class="step-num">2</div><div class="step-info"><strong>Get an instant quote</strong><span>We give you a transparent, competitive trade-in value.</span></div></div>
+        <div class="swap-step"><div class="step-num">3</div><div class="step-info"><strong>Upgrade and save</strong><span>Drop off your old device and walk away with a new one.</span></div></div>
+      </div>
+      <a href="https://wa.me/2348155748154" class="btn-primary" target="_blank"><i class="fa-brands fa-whatsapp"></i> Start Your Swap</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">Testimonials</div>
+      <h2 class="section-title">What Our Customers Say</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card fade-up"><div class="stars">★★★★★</div><p class="testimonial-text">"Bought my iPhone 16 Pro Max here and the experience was flawless. Price was the best in Lagos and delivery was same day. Highly recommend!"</p><div class="testimonial-author"><div class="author-avatar">AC</div><div><div class="author-name">Adaeze Chukwu</div><div class="author-role">Verified Buyer · Lagos</div></div></div></div>
+      <div class="testimonial-card fade-up"><div class="stars">★★★★★</div><p class="testimonial-text">"Did a swap deal for my old MacBook Pro M1. Got an amazing price and walked out with the new M4 model the same day. Real professionals."</p><div class="testimonial-author"><div class="author-avatar" style="background:linear-gradient(135deg,#c9a84c,#e8b84b)">BK</div><div><div class="author-name">Babajide Kolapo</div><div class="author-role">Swap Customer · Abuja</div></div></div></div>
+      <div class="testimonial-card fade-up"><div class="stars">★★★★★</div><p class="testimonial-text">"My iPhone screen shattered and iMate replaced it same-day with an original display. Even came with a 3-month warranty. Won't go anywhere else."</p><div class="testimonial-author"><div class="author-avatar" style="background:linear-gradient(135deg,#22c55e,#16a34a)">FO</div><div><div class="author-name">Funmi Oladapo</div><div class="author-role">Repair Customer · Ikeja</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="cta-banner-inner">
+    <h2>Ready to Shop? Let's Talk.</h2>
+    <p>Get instant answers, personalised deals, and exclusive pricing through our WhatsApp. We're available 24/7.</p>
+    <a href="https://wa.me/2348155748154" class="whatsapp-btn" target="_blank"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div class="newsletter-inner">
+    <h3>Stay in the Loop</h3>
+    <p>Get exclusive deals, new arrivals, and repair tips delivered to your inbox.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Enter your email address">
+      <button type="button">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo">iMate Store<span>.</span></span>
+        <p class="footer-desc">Nigeria's most trusted Apple reseller and repair center. Genuine Apple products, expert repairs, and the best swap deals — backed by real customer support.</p>
+        <div class="social-links">
+          <a href="https://wa.me/2348155748154" class="social-link wa" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="social-link ig"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop</h4><ul><li><a href="#">iPhone</a></li><li><a href="#">MacBook</a></li><li><a href="#">iPad</a></li><li><a href="#">Apple Watch</a></li><li><a href="#">AirPods</a></li><li><a href="#">Accessories</a></li></ul></div>
+      <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Screen Repair</a></li><li><a href="#">Battery Replacement</a></li><li><a href="#">Swap / Trade-In</a></li><li><a href="#">Warranty Claims</a></li><li><a href="#">Data Recovery</a></li><li><a href="#">Instalment Plans</a></li></ul></div>
+      <div class="footer-col"><h4>Find Us</h4>
+        <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>7 Simbiat Abiola Way, Ikeja, Lagos State, Nigeria</span></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-envelope"></i><span>support@imatestores.com.ng</span></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><span>+234 812 929 5267</span></div>
+        <div class="footer-contact-item"><i class="fa-solid fa-clock"></i><span>Mon–Sat: 9am – 7pm<br>Sun: 11am – 5pm</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 iMate Store. All rights reserved.</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Warranty Policy</a><a href="#">Return Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// MOBILE NAV LOGIC
+// ============================================================
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const mobileNav = document.getElementById('mobile-nav');
+
+function toggleMobileNav() {
+  const isOpen = mobileNav.classList.contains('open');
+  if (isOpen) {
+    closeMobileNav();
+  } else {
+    openMobileNav();
+  }
+}
+
+function openMobileNav() {
+  mobileNav.classList.add('open');
+  hamburgerBtn.classList.add('active');
+  hamburgerBtn.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileNav() {
+  mobileNav.classList.remove('open');
+  hamburgerBtn.classList.remove('active');
+  hamburgerBtn.setAttribute('aria-expanded', 'false');
+  // only restore scroll if cart is also closed
+  if (!document.getElementById('cart-panel').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+
+// ============================================================
+// CART DATA
+// ============================================================
+const WA_NUMBER = '2348155748154';
+let cart = JSON.parse(localStorage.getItem('imateCart')) || {};
+
+function formatPrice(n) {
+  return '₦' + n.toLocaleString('en-NG');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(productName) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+    <div>
+      <div style="font-weight:600">Added to Cart!</div>
+      <div class="toast-product">${productName}</div>
+    </div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('removing');
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// ============================================================
+// CART BADGE
+// ============================================================
+function updateBadge() {
+  const total = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  const panelCount = document.getElementById('panel-count');
+  badge.textContent = total;
+  panelCount.textContent = total;
+  badge.classList.remove('bounce');
+  void badge.offsetWidth;
+  badge.classList.add('bounce');
+}
+
+// ============================================================
+// RENDER CART PANEL
+// ============================================================
+function renderCart() {
+  const list = document.getElementById('cart-items-list');
+  const empty = document.getElementById('cart-empty-state');
+  const footer = document.getElementById('cart-footer');
+  const totalEl = document.getElementById('cart-total');
+
+  const ids = Object.keys(cart);
+  if (ids.length === 0) {
+    empty.style.display = 'flex';
+    footer.style.display = 'none';
+    list.querySelectorAll('.cart-item').forEach(el => el.remove());
+    return;
+  }
+
+  empty.style.display = 'none';
+  footer.style.display = 'block';
+  list.querySelectorAll('.cart-item').forEach(el => el.remove());
+
+  let total = 0;
+  ids.forEach(id => {
+    const item = cart[id];
+    total += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.id = `cart-item-${id}`;
+    div.innerHTML = `
+      <div class="cart-item-img">
+        <img src="${item.img}" alt="${item.name}" onerror="this.outerHTML='<i class=\\'fa-solid ${item.icon}\\'></i>'">
+      </div>
+      <div class="cart-item-info">
+        <div class="cart-item-cat">${item.cat}</div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${formatPrice(item.price)}</div>
+        <div class="cart-qty">
+          <button class="cart-qty-btn" onclick="changeCartQty('${id}', -1)"><i class="fa-solid fa-minus" style="font-size:10px"></i></button>
+          <span class="cart-qty-num" id="cqty-${id}">${item.qty}</span>
+          <button class="cart-qty-btn" onclick="changeCartQty('${id}', 1)"><i class="fa-solid fa-plus" style="font-size:10px"></i></button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart('${id}')"><i class="fa-solid fa-xmark"></i></button>
+    `;
+    list.appendChild(div);
+  });
+
+  totalEl.textContent = formatPrice(total);
+
+  let msg = '🛍️ *iMate Store Order*\n\n';
+  ids.forEach(id => {
+    const item = cart[id];
+    msg += `• ${item.name} x${item.qty} — ${formatPrice(item.price * item.qty)}\n`;
+  });
+  msg += `\n*Total: ${formatPrice(total)}*\n\nPlease confirm my order. Thank you!`;
+  document.getElementById('wa-order-btn').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  localStorage.setItem('imateCart', JSON.stringify(cart));
+}
+
+// ============================================================
+// ADD TO CART
+// ============================================================
+function addToCart(id, name, price, cat, img, icon) {
+  if (cart[id]) {
+    cart[id].qty += 1;
+  } else {
+    cart[id] = { name, price, cat, img, icon, qty: 1 };
+  }
+  updateBadge();
+  renderCart();
+  showToast(name);
+  updateCardQtyToggle(id);
+}
+
+function changeCartQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) {
+    removeFromCart(id);
+    return;
+  }
+  document.getElementById(`cqty-${id}`).textContent = cart[id].qty;
+  renderCart();
+  updateCardQtyToggle(id);
+}
+
+function removeFromCart(id) {
+  const item = document.getElementById(`cart-item-${id}`);
+  if (item) {
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(40px)';
+    item.style.transition = '0.25s';
+    setTimeout(() => item.remove(), 250);
+  }
+  delete cart[id];
+  setTimeout(() => { updateBadge(); renderCart(); resetCardCtrl(id); }, 260);
+}
+
+function clearCart() {
+  cart = {};
+  localStorage.removeItem('imateCart');
+  updateBadge();
+  renderCart();
+  document.querySelectorAll('.product-card').forEach(card => {
+    resetCardCtrl(card.dataset.id);
+  });
+}
+
+// ============================================================
+// CARD QUANTITY TOGGLE
+// ============================================================
+function updateCardQtyToggle(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if (!card) return;
+  const ctrl = card.querySelector('.product-cart-ctrl');
+  const qty = cart[id] ? cart[id].qty : 0;
+  if (qty > 0) {
+    ctrl.innerHTML = `
+      <div class="qty-toggle">
+        <button class="q-btn" onclick="cardQtyChange('${id}', -1)"><i class="fa-solid fa-minus" style="font-size:10px"></i></button>
+        <span class="q-num" id="qcard-${id}">${qty}</span>
+        <button class="q-btn" onclick="cardQtyChange('${id}', 1)"><i class="fa-solid fa-plus" style="font-size:10px"></i></button>
+      </div>
+    `;
+  } else {
+    ctrl.innerHTML = `<button class="add-cart" onclick="triggerAdd('${id}')"><i class="fa-solid fa-plus"></i></button>`;
+  }
+}
+
+function cardQtyChange(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) {
+    delete cart[id];
+    resetCardCtrl(id);
+    updateBadge();
+    renderCart();
+    return;
+  }
+  const el = document.getElementById(`qcard-${id}`);
+  if (el) el.textContent = cart[id].qty;
+  const cel = document.getElementById(`cqty-${id}`);
+  if (cel) cel.textContent = cart[id].qty;
+  updateBadge();
+  renderCart();
+}
+
+function resetCardCtrl(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if (!card) return;
+  const ctrl = card.querySelector('.product-cart-ctrl');
+  ctrl.innerHTML = `<button class="add-cart" onclick="triggerAdd('${id}')"><i class="fa-solid fa-plus"></i></button>`;
+}
+
+function triggerAdd(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if (!card) return;
+  addToCart(id, card.dataset.name, parseInt(card.dataset.price), card.dataset.cat, card.dataset.img, card.dataset.icon);
+  openCart();
+}
+
+// ============================================================
+// CART PANEL OPEN/CLOSE
+// ============================================================
+function openCart() {
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCartPanel() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-panel').classList.remove('open');
+  if (!mobileNav.classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+function toggleCart() {
+  const isOpen = document.getElementById('cart-panel').classList.contains('open');
+  isOpen ? closeCartPanel() : openCart();
+}
+function closeCart(e) {
+  if (e.target === document.getElementById('cart-overlay')) closeCartPanel();
+}
+
+// ============================================================
+// INIT PRODUCT CARDS
+// ============================================================
+document.querySelectorAll('.product-card').forEach(card => {
+  const id = card.dataset.id;
+  const ctrl = card.querySelector('.product-cart-ctrl');
+  ctrl.innerHTML = `<button class="add-cart" onclick="triggerAdd('${id}')"><i class="fa-solid fa-plus"></i></button>`;
+});
+
+// ============================================================
+// HERO SLIDESHOW
+// ============================================================
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+let current = 0, timer;
+
+function goTo(idx) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit-left');
+  dots[current].classList.remove('active');
+  const prev = current;
+  setTimeout(() => slides[prev].classList.remove('exit-left'), 700);
+  current = (idx + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  resetTimer();
+}
+function resetTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => goTo(current + 1), 5000);
+}
+document.getElementById('slider-prev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('slider-next').addEventListener('click', () => goTo(current + 1));
+dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+resetTimer();
+
+// ============================================================
+// SCROLL FADE
+// ============================================================
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(el => {
+    if (el.isIntersecting) { el.target.classList.add('visible'); observer.unobserve(el.target); }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ============================================================
+// TABS
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+// ============================================================
+// ESC KEY
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeCartPanel();
+    closeMobileNav();
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+updateBadge();
+renderCart();
+Object.keys(cart).forEach(id => updateCardQtyToggle(id));
+</script>
+</body>
+</html>
