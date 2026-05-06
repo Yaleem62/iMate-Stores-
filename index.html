@@ -1482,6 +1482,10 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
   });
 });
+// Run these as soon as the page loads to show saved items
+updateBadge();
+renderCart();
+
 
 // ESC key close
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCartPanel(); });
