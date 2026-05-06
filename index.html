@@ -1190,7 +1190,7 @@
 // CART DATA
 // ============================================================
 const WA_NUMBER = '2348155748154';
-let cart = JSON.parse(localStorage.getItem('imateCart')) || []; // { productId: { name, price, cat, img, icon, qty } }
+let cart = JSON.parse(localStorage.getItem('imateCart')) || {}; // { productId: { name, price, cat, img, icon, qty } }
 
 function formatPrice(n) {
   return '₦' + n.toLocaleString('en-NG');
@@ -1482,10 +1482,15 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
   });
 });
-// Run these as soon as the page loads to show saved items
+// Sync everything on page load
 updateBadge();
 renderCart();
 
+// This part tells each product card to show the right buttons
+Object.keys(cart).forEach(id => {
+    updateCardQtyToggle(id);
+    });
+    
 
 // ESC key close
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCartPanel(); });
