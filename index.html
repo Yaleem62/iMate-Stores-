@@ -1332,6 +1332,7 @@ function removeFromCart(id) {
 
 function clearCart() {
   cart = {};
+  localStorage.removeItem('imateCart');
   updateBadge();
   renderCart();
   // Reset all card controls
@@ -1490,7 +1491,7 @@ renderCart();
 Object.keys(cart).forEach(id => {
     updateCardQtyToggle(id);
     });
-    
+
 
 // ESC key close
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCartPanel(); });
