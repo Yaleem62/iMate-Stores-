@@ -865,32 +865,33 @@
     .slide-title { font-size: 30px; }
     .util-bar { display: none; }
   }
-  /* 1. Make the section background white so images blend at the edges */
+  /* 1. Ensure the section is white */
   .products-section {
       background-color: #ffffff !important;
       }
 
-      /* 2. Style the card with a subtle, high-end border */
-  .product-card {
-      background-color: #ffffff !important;
-          border: 1px solid #e5e5e7 !important; /* This is the subtle Apple-style grey border */
-              border-radius: 16px; /* Smooth rounded corners */
-                  overflow: hidden; /* Ensures content stays inside the rounded corners */
-                      transition: transform 0.3s ease, box-shadow 0.3s ease;
-                      }
+      /* 2. Add a visible, professional border to the card */
+      .product-card {
+          background-color: #ffffff !important;
+              border: 1px solid #d2d2d7 !important; /* A slightly darker, visible grey */
+                  border-radius: 16px !important;
+                      margin-bottom: 20px;
+                          overflow: hidden;
+                              display: flex;
+                                  flex-direction: column;
+                                  }
 
-    /* 3. Add a slight lift when you hover to make it feel premium */
-    .product-card:hover {
-        transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-                border-color: #d2d2d7;
-                }
+                                  /* 3. Ensure text is separated from the image area */
+                                  .product-body {
+                                      padding: 20px !important;
+                                          border-top: 1px solid #f5f5f7 !important; /* Optional: adds a thin line between image and text */
+                                          }
 
-    /* 4. Ensure the image container itself has no extra background */
-    .product-img {
-        background-color: transparent !important;
-            padding: 20px; /* Gives the product some "breathing room" inside the border */
-            }
+                                          .product-img {
+                                              background-color: #ffffff !important;
+                                                  padding: 20px;
+                                                  }
+                                                  
 
 </style>
 </head>
