@@ -1782,6 +1782,34 @@ document.querySelectorAll('.tab').forEach(tab => {
 });
 
 
+const tabs = document.querySelectorAll('.tab');
+const products = document.querySelectorAll('.product-card');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+            // 1. Change the "active" look of the button
+                    document.querySelector('.tab.active').classList.remove('active');
+                            tab.classList.add('active');
+
+                                    // 2. Get the filter name (e.g., "iPhone")
+                                            const filterValue = tab.getAttribute('data-filter');
+
+                                                    // 3. Loop through products and show/hide
+                                                            products.forEach(product => {
+                                                                        const productCat = product.getAttribute('data-cat');
+                                                                                    
+                                                                                                if (filterValue === 'all' || productCat === filterValue) {
+                                                                                                                product.style.display = 'flex'; // Matches! Show it.
+                                                                                                                            } else {
+                                                                                                                                            product.style.display = 'none'; // Doesn't match! Hide it.
+                                                                                                                                                        }
+                                                                                                                                                                });
+                                                                                                                                                                    });
+                                                                                                                                                                    });
+                                                                                                                                                                    
+
+
+
 // ============================================================
 // ESC KEY
 // ============================================================
