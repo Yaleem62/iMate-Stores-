@@ -234,23 +234,34 @@
   .cart-subtotal span { font-size: 14px; color: var(--gray-600); }
   .cart-subtotal strong { font-size: 20px; font-weight: 700; }
   .cart-footer-btns { display: flex; flex-direction: column; gap: 10px; }
-  .btn-wa-order {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    background: var(--wa); color: #fff;
-    border: none; border-radius: 50px; padding: 15px;
-    font-size: 15px; font-weight: 700; cursor: pointer;
-    transition: all 0.25s; text-decoration: none; width: 100%;
-  }
-  .btn-wa-order:hover { background: #1da855; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,211,102,0.35); }
-  .btn-wa-order i { font-size: 20px; }
-  .btn-clear-cart {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    background: transparent; color: var(--gray-600);
-    border: 1.5px solid var(--gray-200); border-radius: 50px; padding: 12px;
-    font-size: 13px; font-weight: 500; cursor: pointer;
-    transition: all 0.2s; width: 100%;
-  }
-  .btn-clear-cart:hover { border-color: #ef4444; color: #ef4444; background: #fee2e2; }
+  .btn-checkout {
+        background-color: #0071e3 !important; /* Professional Apple-style blue */
+            color: #ffffff;
+                width: 100%;
+                    padding: 16px;
+                        border-radius: 12px;
+                            border: none;
+                                font-size: 17px;
+                                    font-weight: 600;
+                                        cursor: pointer;
+                                            margin-bottom: 12px;
+                                                transition: background 0.3s ease;
+                                                }
+
+                                                .btn-checkout:hover {
+                                                    background-color: #0077ed;
+                                                    }
+
+                                                    /* Ensure the 'Clear Cart' button sits nicely below it */
+                                                    .btn-clear-cart {
+                                                        margin-top: 5px;
+                                                            background: transparent;
+                                                                border: none;
+                                                                    color: #86868b;
+                                                                        width: 100%;
+                                                                        }
+
+  
 
   /* ============================================================
      QUANTITY TOGGLE on product cards
@@ -924,9 +935,9 @@
         <strong id="cart-total">₦0</strong>
       </div>
       <div class="cart-footer-btns">
-        <a href="#" id="wa-order-btn" class="btn-wa-order" target="_blank">
-          <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp
-        </a>
+        <button id="checkout-btn" class="btn-checkout">
+              Checkout
+              </button>
         <button class="btn-clear-cart" onclick="clearCart()">
           <i class="fa-solid fa-trash"></i> Clear Cart
         </button>
